@@ -56,7 +56,8 @@ public class BiGram extends AbstractNGrams
 
 	@Override
 	public String generateRandomSentence() 
-	{
+	{  
+		// Complete this TODO -Arpitha
 		// TODO Auto-generated method stub
 		// Instantiate the Sentence String and initialize it with Start tag <s>
 		StringBuilder randomSentence = new StringBuilder("<s> ");
