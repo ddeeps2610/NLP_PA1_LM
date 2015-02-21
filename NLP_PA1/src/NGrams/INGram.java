@@ -17,4 +17,5 @@ public interface INGram
 	public String generateRandomSentence();
 	public void laplaceSmoothing(LinkedList<String> corpus);
 	public double calculatePerplexity();
+	public double calculateEmailProbability(String email);
 }

@@ -10,7 +10,8 @@ import java.util.LinkedList;
  * @author Deepak
  *
  */
-public class TriGram extends AbstractNGrams {
+public class TriGram extends AbstractNGrams 
+{
 
 	/* (non-Javadoc)
 	 * @see NGrams.AbstractNGrams#countNGram(java.util.LinkedList)
@@ -18,48 +19,44 @@ public class TriGram extends AbstractNGrams {
 	@Override
 	public void countNGram(LinkedList<String> corpus) 
 	{
-		if(this.nGramCounts == null)
-			this.nGramCounts = new HashMap<String, Integer>();
+		if(this.nGramMap == null)
+			this.nGramMap = new HashMap<String, HashMap<String,NthWord>>();
 		
-		StringBuilder nMinus2Word = null;
-		StringBuilder nMinus1Word = null;
-		StringBuilder triGram = null;
+		HashMap<String, NthWord> nthWordMap = new HashMap<String, NthWord>();
+		
+		StringBuilder previousWord = null;
 		
 		for(String sentenceToken : corpus)
 		{
 			String[] wordTokens = sentenceToken.split(" ");
+			previousWord = null;
+			previousWord.append("");
 			
 			for(String word : wordTokens)
 			{
-				if (nMinus2Word == null)
+				if(this.nGramMap.containsKey(previousWord))
 				{
-					nMinus2Word = new StringBuilder();
-					nMinus2Word.append(word);
-				}
-				else if(nMinus1Word == null)
-				{
-					nMinus1Word = new StringBuilder();
-					nMinus1Word.append(word);
+					if(this.nGramMap.get(previousWord).containsKey(word))
+					{
+						this.nGramMap.get(previousWord).get(word).setCount(this.nGramMap.get(previousWord).get(word).getCount()+1);
+					}
+					else
+					{
+						NthWord nthWord = new NthWord();
+						nthWord.setWord(word);
+						nthWord.setCount(1);
+						this.nGramMap.get(previousWord).put(word, nthWord);
+					}
+					previousWord = null;
+					previousWord.append(word);
 				}
 				else
 				{
-					if (triGram == null)
-						triGram = new StringBuilder();
-					
-					triGram.append(nMinus2Word + " " +nMinus1Word + " " + word);
-					
-					nMinus2Word = null;
-					nMinus2Word = new StringBuilder(nMinus1Word);
-					
-					nMinus1Word = null;
-					nMinus1Word = new StringBuilder(word);
-					
-					if(!this.nGramCounts.containsKey(triGram.toString()))
-						this.nGramCounts.put(triGram.toString(), 1);
-					else
-						this.nGramCounts.put(triGram.toString(), this.nGramCounts.get(triGram.toString())+1);
-					
-					triGram = null;
+					NthWord nthWord = new NthWord();
+					nthWord.setWord(word);
+					nthWord.setCount(1);
+					this.nGramMap.get(previousWord).put(word, nthWord);
+					this.nGramMap.put(previousWord.toString(), null);
 				}
 			}
 		}
@@ -94,6 +91,18 @@ public class TriGram extends AbstractNGrams {
 	private String getNextWord(String nGramMinusOneWord) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public double calculateEmailProbability(String email) 
+	{
+		String[] words = email.split(" ");
+		for(String nGram : words)
+		{
+			
+		}
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

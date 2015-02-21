@@ -1,5 +1,6 @@
 package preProcessor;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import NGrams.BiGram;
@@ -19,67 +20,97 @@ public class PreProcessorTest
 {
 	public static void main (String[] args)
 	{
-		PreProcessor preProcessor = new PreProcessor();
 		try 
 		{
+			PreProcessor preProcessor = new PreProcessor();
+			
 			preProcessor.process(".\\InputFiles\\training.txt", InputType.train);
 			LinkedList<String> upTrain = preProcessor.getUpTrain();
 			LinkedList<String> downTrain = preProcessor.getDownTrain();
 			
-			System.out.println("UP_TRAIN:");
-			for(String token: upTrain)
-				System.out.println(token);
-			
-			System.out.println("\n\n DOWN_TRAIN:");
-			for(String token : downTrain)
-				System.out.println(token);
-			
 			// UpTrain Models
+			// Unigram
 			INGram uniGramUpTrain = new UniGram();
 			uniGramUpTrain.computeNGramProbabilities(upTrain);
 			//uniGramUpTrain.printNGramProbabilities();
-			uniGramUpTrain.generateRandomSentence();
+			//uniGramUpTrain.generateRandomSentence();
 			uniGramUpTrain.laplaceSmoothing(upTrain);
-			double perplexity = uniGramUpTrain.calculatePerplexity();
-			System.out.println("Perplexity for the unigram model : "+ perplexity);
+			double unigramPerplexity = uniGramUpTrain.calculatePerplexity();
+			System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
 			
-			
-			
+			// Bigram
 			INGram biGramUpTrain = new BiGram();
 			biGramUpTrain.computeNGramProbabilities(upTrain);
 			//biGramUpTrain.printNGramProbabilities();
+			//biGramUpTrain.generateRandomSentence();
 			biGramUpTrain.laplaceSmoothing(upTrain);
 			double bigramPerplexity = biGramUpTrain.calculatePerplexity();
 			System.out.println("Perplexity for the bigram Model : "+bigramPerplexity);
 			
+			// Trigram
 			INGram triGramUpTrain = new TriGram();
 			triGramUpTrain.computeNGramProbabilities(upTrain);
 			//triGramUpTrain.printNGramProbabilities();
+			//triGramUpTrain.generateRandomSentence();
 			triGramUpTrain.laplaceSmoothing(upTrain);
 			double trigramPerplexity = biGramUpTrain.calculatePerplexity();
 			System.out.println("Perplexity for the trigram Model : "+trigramPerplexity);
 			
-			System.out.println("\n\n\n");
-			System.out.println("Perplexity for the unigram model : "+ perplexity);
-			System.out.println("Perplexity for the bigram Model : "+bigramPerplexity);
-			System.out.println("Perplexity for the trigram Model : "+trigramPerplexity);
-			
 			// DownTrain Models
-			/*INGram uniGramDownTrain = new UniGram();
+			// Unigram
+			INGram uniGramDownTrain = new UniGram();
 			uniGramDownTrain.computeNGramProbabilities(downTrain);
-			uniGramDownTrain.printNGramProbabilities();
-			uniGramDownTrain.generateRandomSentence();
-			*/
-			/*
+			//uniGramDownTrain.printNGramProbabilities();
+			//uniGramDownTrain.generateRandomSentence();
+			uniGramDownTrain.laplaceSmoothing(downTrain);
+			double uniDownPerplexity = uniGramDownTrain.calculatePerplexity();
+			System.out.println("Perplexity for the unigram for downtrain : " + uniDownPerplexity);
+			
+			// Bigram
 			INGram biGramDownTrain = new BiGram();
 			biGramDownTrain.computeNGramProbabilities(downTrain);
-			biGramDownTrain.printNGramProbabilities();
-						
+			//biGramDownTrain.printNGramProbabilities();
+			//biGramDownTrain.generateRandomSentence();
+			biGramDownTrain.laplaceSmoothing(downTrain);
+			double biDownPerplexity = biGramDownTrain.calculatePerplexity();
+			System.out.println("Perplexity for the bigram for downtrain : " + biDownPerplexity);
+			
+			//Trigram
 			INGram triGramDownTrain = new TriGram();
 			triGramDownTrain.computeNGramProbabilities(downTrain);
-			triGramDownTrain.printNGramProbabilities();
+			//triGramDownTrain.printNGramProbabilities();
+			//triGramDownTrain.generateRandomSentence();	
+			triGramDownTrain.laplaceSmoothing(downTrain);
+			double triDownPerplexity = triGramDownTrain.calculatePerplexity();
+			System.out.println("Perplexity for trigram for downtrain : " + triDownPerplexity);
+			
+			System.out.println("\n\n\n");
+			System.out.println("Perplexity for the unigram uptrain : "+ unigramPerplexity);
+			System.out.println("Perplexity for the bigram uptrain : "+bigramPerplexity);
+			System.out.println("Perplexity for the trigram uptrain : "+trigramPerplexity);
+			System.out.println("Perplexity for the unigram downtrain : "+ uniDownPerplexity);
+			System.out.println("Perplexity for the bigram downtrain : "+biDownPerplexity);
+			System.out.println("Perplexity for the trigram downtrain : "+triDownPerplexity);
+			
+			// Contest - Test your Up and Down Trained modules for the test mails
+			PreProcessor contestPreProcessor = new PreProcessor();
+			contestPreProcessor.process(".\\InputFiles\\test.txt", InputType.train);
+			LinkedList<String> upDownTest= contestPreProcessor.getUpDownTest();
+			
+			// Result storage
+			int i = 0;
+			HashMap<Integer,Integer> guesses = new HashMap<Integer, Integer>();
+			for(String email : upDownTest)
+			{
+				double upstreamProb = triGramUpTrain.calculateEmailProbability(email);
+				double downstreamProb = triGramDownTrain.calculateEmailProbability(email);
+				Email newMail = new Email();
 				
-			*/
+				newMail.setEmail(email);
+				newMail.setId(i++);
+				newMail.setStream(upstreamProb > downstreamProb ?true :false);
+			}
+			
 		} catch (FileNotFoundException e) {
 			System.out.println("File not initialized properly");
 			e.printStackTrace();

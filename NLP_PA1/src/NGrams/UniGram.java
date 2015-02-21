@@ -25,21 +25,32 @@ public class UniGram extends AbstractNGrams
 	@Override
 	public void countNGram(LinkedList<String> corpus) 
 	{
-		if(this.nGramCounts == null)
-			this.nGramCounts = new HashMap<String, Integer>();
+		if(this.nGramMap == null)
+			this.nGramMap = new HashMap<String, HashMap<String,NthWord>>();
+		
+		HashMap<String, NthWord> nthWordMap = new HashMap<String, NthWord>();
+		String nMinus1 = "";
 		
 		for(String sentenceToken : corpus)
 		{
-			String[] wordTokens = sentenceToken.split(" ");
+			List<String> wordTokens = this.tokenizeSentence(sentenceToken);
 			
 			for(String word : wordTokens)
 			{
-				if(!this.nGramCounts.containsKey(word))
-					this.nGramCounts.put(word, 1);
+				if(!nthWordMap.containsKey(word))
+				{
+					NthWord nthWord = new NthWord();
+					nthWord.setWord(word);
+					nthWord.setCount(1);
+					nthWordMap.put(word, nthWord);					
+				}
 				else
-					this.nGramCounts.put(word, this.nGramCounts.get(word)+1);
+				{
+					nthWordMap.get(word).setCount(nthWordMap.get(word).getCount()+1);
+				}
 			}
 		}
+		this.nGramMap.put(nMinus1, nthWordMap);
 	}
 
 	@Override
@@ -70,34 +81,18 @@ public class UniGram extends AbstractNGrams
 	 * 
 	 * @return
 	 */
-	public String getNextWord() {
-		String retVal = "";
-		
-		if(nextLargestProbabilityIndex == -1 || sortedProbabilityList == null ||sortedProbabilityList.size() == 0) {
-			
-			// get all the KeyValue pairs and put it into an array-list
-			sortedProbabilityList = new ArrayList<Entry<String,Float>>(nGramProbabilities.entrySet());
-			
-			// the comparator class can be a separate class instead of an anonymous class
-			Collections.sort(sortedProbabilityList, new Comparator<Entry<String, Float>>() {
-		        
-				@Override
-		        public int compare(Entry<String, Float> entrySet1, Entry<String, Float> entrySet2) {
-		            return entrySet1.getValue().compareTo(entrySet2.getValue()) * -1; // to sort in descending order (confirmation required)
-		        }
-				
-		    });
-			nextLargestProbabilityIndex = 0;
-		}
-		
-		//System.out.println(sortedProbabilityList.get(nextLargestProbabilityIndex));
-		retVal = sortedProbabilityList.get(nextLargestProbabilityIndex++).getKey();
-		System.out.println(retVal);	
-		return retVal;
+	public String getNextWord() 
+	{
+		return null;
 	}
 	
 	// stores the Map entries in a sorted manner based on "entry" values (if entries are removed/added in the map, sink the list as well (better make the list empty))
 	private List<Entry<String, Float>> sortedProbabilityList  = new ArrayList<Entry<String,Float>>();
 	// not required if we pass the index can be passed (better to pass as parameter)
 	private int nextLargestProbabilityIndex = -1;
+	@Override
+	public double calculateEmailProbability(String email) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

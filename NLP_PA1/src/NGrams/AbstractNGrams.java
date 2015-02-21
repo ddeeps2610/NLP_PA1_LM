@@ -5,6 +5,7 @@ package NGrams;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,8 +15,7 @@ import java.util.Map.Entry;
  */
 public abstract class AbstractNGrams implements INGram 
 {
-	protected HashMap<String, Integer> nGramCounts;
-	protected HashMap<String, Float> nGramProbabilities;
+	protected HashMap<String, HashMap<String, NthWord>> nGramMap;
 	
 
 	/* (non-Javadoc)
@@ -30,28 +30,39 @@ public abstract class AbstractNGrams implements INGram
 	@Override
 	public final void computeNGramProbabilities(LinkedList<String> corpus) 
 	{
-		double sumOfProbability = 0;
-		int zeroProbCount = 0;
-		// Count the occurrences of each token type
-		if (this.nGramCounts == null)
+		// If the corpus not created already, create it.
+		if (this.nGramMap == null)
 			this.countNGram(corpus);
 		
-		// Calculate the total number of tokens
-		int totalTokens = this.getTotalTokens();
-		
-		if(this.nGramProbabilities == null)
-			this.nGramProbabilities = new HashMap<String, Float>();
+		// Initialize the nGramMap
+		if(this.nGramMap == null)
+			this.nGramMap = new HashMap<String, HashMap<String,NthWord>>();
 		
 		// Calculate the probability of each token type in the corpus
-		for(Map.Entry<String, Integer> entry : this.nGramCounts.entrySet())
+		for(Map.Entry<String, HashMap<String, NthWord>> nGramEntry : this.nGramMap.entrySet())
 		{
-			this.nGramProbabilities.put(entry.getKey(), ((float) entry.getValue()/totalTokens));
-			sumOfProbability += (float) entry.getValue()/totalTokens;
-			if(entry.getValue() == 0)
-				zeroProbCount++;
-		}
-		System.out.println("Sum of all probabilities : " + sumOfProbability);
-		System.out.println("Count of elements with zero probability : "+zeroProbCount);
+			if((nGramEntry.getValue() != null) && (!nGramEntry.getValue().isEmpty()))
+			{
+				int count = 0;
+				// Count the total occurences of the given (n-1) words
+				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
+				{
+					count += nThWordEntry.getValue().getCount();
+				}
+				
+				// Calculate and assign probabilities
+				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
+				{
+					int occurrence = nThWordEntry.getValue().getCount();
+					nThWordEntry.getValue().setProbability(occurrence/count);
+				}
+			}
+		}	
+	}
+	
+	protected List<String> tokenizeSentence (String sentence)
+	{
+		return null;
 	}
 	
 	public final void laplaceSmoothing(LinkedList<String> corpus) 
@@ -59,29 +70,50 @@ public abstract class AbstractNGrams implements INGram
 		double sumOfProbability = 0 ;
 		
 		System.out.println("Performing Laplace smoothing..!!");
-		if(this.nGramCounts == null)
+		if(this.nGramMap == null)
 			this.countNGram(corpus);
 		
-		int totalTokens = this.getTotalTokens();
-		
-		for(Map.Entry<String, Integer> entry : this.nGramCounts.entrySet())
+		// Calculate the probability of each token type in the corpus
+		for(Map.Entry<String, HashMap<String, NthWord>> nGramEntry : this.nGramMap.entrySet())
 		{
-			this.nGramProbabilities.put(entry.getKey(), ((float) (entry.getValue()+1)/(totalTokens+this.nGramCounts.size())));
-			sumOfProbability += (float) (entry.getValue()+1)/(totalTokens+this.nGramCounts.size());
-		}
-		System.out.println("Sum of all probabilities with laplace smoothing : " + sumOfProbability);
+			if((nGramEntry.getValue() != null) && (!nGramEntry.getValue().isEmpty()))
+			{
+				int count = 0;
+				// Count the total occurences of the given (n-1) words
+				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
+				{
+					count += nThWordEntry.getValue().getCount();
+				}
+				
+				// Calculate and assign probabilities
+				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
+				{
+					int occurrence = nThWordEntry.getValue().getCount();
+					nThWordEntry.getValue().setProbability((occurrence+1)/(count+nGramEntry.getValue().size()));
+				}
+			}
+		}		
 	}
 	
 	public final double calculatePerplexity() 
 	{
 		System.out.println("\nCalculating perplexity..!!");
 		double perplexity = 0;
-		for(Map.Entry<String, Float> entry : this.nGramProbabilities.entrySet())
+		int count=0;
+		
+		for(Map.Entry<String, HashMap<String, NthWord>> nGramEntry : this.nGramMap.entrySet())
 		{
-			perplexity +=Math.log(entry.getValue()); 
+			
+			for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
+			{
+				perplexity += Math.log(nThWordEntry.getValue().getProbability());
+				count++;
+			}
 		}
+		
 		//System.out.println("Pre Perplexity: "+ perplexity + ": " + this.nGramProbabilities.size());
-		perplexity = -1 * perplexity / this.nGramProbabilities.size();
+		perplexity = -1 * perplexity / count;
+		
 		//System.out.println("Pre antilog: "+perplexity);
 		return Math.pow(Math.E, (perplexity));
 	}
@@ -90,11 +122,14 @@ public abstract class AbstractNGrams implements INGram
 	{
 		int count = 0;
 		
-		if(this.nGramCounts != null)
+		if(this.nGramMap != null)
 		{
-			for(Map.Entry<String, Integer> entry : this.nGramCounts.entrySet())
+			for(Map.Entry<String, HashMap<String, NthWord>> entry : this.nGramMap.entrySet())
 		    {
-		    	count += entry.getValue();
+		    	for(Map.Entry<String, NthWord> nthWordENtry : entry.getValue().entrySet())
+		    	{
+		    		count += nthWordENtry.getValue().getCount();
+		    	}
 		    }
 		}
 	    return count;
@@ -107,12 +142,15 @@ public abstract class AbstractNGrams implements INGram
 	@Override
 	public final void printNGramProbabilities() 
 	{
-		if(this.nGramProbabilities != null)
+		if(this.nGramMap != null)
 		{
-			for(Entry<String, Float> entry : this.nGramProbabilities.entrySet())
-			{
-				System.out.println(entry.getKey() + " : " + entry.getValue());
-			}
+			for(Map.Entry<String, HashMap<String, NthWord>> entry : this.nGramMap.entrySet())
+		    {
+		    	for(Map.Entry<String, NthWord> nthWordENtry : entry.getValue().entrySet())
+		    	{
+		    		System.out.println(nthWordENtry.getKey() + " : " + nthWordENtry.getValue().getProbability());
+		    	}
+		    }			
 		}
 	}
 
