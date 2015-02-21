@@ -22,7 +22,7 @@ public class PreProcessorTest
 		PreProcessor preProcessor = new PreProcessor();
 		try 
 		{
-			preProcessor.process(".\\InputFiles\\sample.txt", InputType.train);
+			preProcessor.process(".\\InputFiles\\training.txt", InputType.train);
 			LinkedList<String> upTrain = preProcessor.getUpTrain();
 			LinkedList<String> downTrain = preProcessor.getDownTrain();
 			
@@ -37,21 +37,40 @@ public class PreProcessorTest
 			// UpTrain Models
 			INGram uniGramUpTrain = new UniGram();
 			uniGramUpTrain.computeNGramProbabilities(upTrain);
-			uniGramUpTrain.printNGramProbabilities();
+			//uniGramUpTrain.printNGramProbabilities();
+			uniGramUpTrain.generateRandomSentence();
+			uniGramUpTrain.laplaceSmoothing(upTrain);
+			double perplexity = uniGramUpTrain.calculatePerplexity();
+			System.out.println("Perplexity for the unigram model : "+ perplexity);
+			
+			
 			
 			INGram biGramUpTrain = new BiGram();
 			biGramUpTrain.computeNGramProbabilities(upTrain);
-			biGramUpTrain.printNGramProbabilities();
+			//biGramUpTrain.printNGramProbabilities();
+			biGramUpTrain.laplaceSmoothing(upTrain);
+			double bigramPerplexity = biGramUpTrain.calculatePerplexity();
+			System.out.println("Perplexity for the bigram Model : "+bigramPerplexity);
 			
 			INGram triGramUpTrain = new TriGram();
 			triGramUpTrain.computeNGramProbabilities(upTrain);
-			triGramUpTrain.printNGramProbabilities();
+			//triGramUpTrain.printNGramProbabilities();
+			triGramUpTrain.laplaceSmoothing(upTrain);
+			double trigramPerplexity = biGramUpTrain.calculatePerplexity();
+			System.out.println("Perplexity for the trigram Model : "+trigramPerplexity);
+			
+			System.out.println("\n\n\n");
+			System.out.println("Perplexity for the unigram model : "+ perplexity);
+			System.out.println("Perplexity for the bigram Model : "+bigramPerplexity);
+			System.out.println("Perplexity for the trigram Model : "+trigramPerplexity);
 			
 			// DownTrain Models
-			INGram uniGramDownTrain = new UniGram();
+			/*INGram uniGramDownTrain = new UniGram();
 			uniGramDownTrain.computeNGramProbabilities(downTrain);
 			uniGramDownTrain.printNGramProbabilities();
-						
+			uniGramDownTrain.generateRandomSentence();
+			*/
+			/*
 			INGram biGramDownTrain = new BiGram();
 			biGramDownTrain.computeNGramProbabilities(downTrain);
 			biGramDownTrain.printNGramProbabilities();
@@ -59,7 +78,8 @@ public class PreProcessorTest
 			INGram triGramDownTrain = new TriGram();
 			triGramDownTrain.computeNGramProbabilities(downTrain);
 			triGramDownTrain.printNGramProbabilities();
-						
+				
+			*/
 		} catch (FileNotFoundException e) {
 			System.out.println("File not initialized properly");
 			e.printStackTrace();

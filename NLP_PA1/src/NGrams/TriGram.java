@@ -66,7 +66,32 @@ public class TriGram extends AbstractNGrams {
 	}
 
 	@Override
-	public String generateRandomSentence() {
+	public String generateRandomSentence() 
+	{
+		// Instantiate the Sentence String and initialize it with Start tag <s>
+		StringBuilder randomSentence = new StringBuilder("<s> ");
+		String nMinusOneWord = "<s>";
+		String nMinusTwoWord = "";
+		StringBuilder newSentence = new StringBuilder("<s> ");
+		String nthWord;
+		
+		do
+		{
+			nthWord = this.getNextWord(nMinusTwoWord + " " +nMinusOneWord);
+			if(nthWord.equals("<s>"))
+				continue;
+			
+			// Assign the nth word to (n-1)th word
+			nMinusTwoWord = nMinusOneWord;
+			nMinusOneWord = nthWord;
+			newSentence.append(nthWord + " ");
+		}while(!nthWord.contains("</s>"));
+		
+		
+		return randomSentence.toString();
+	}
+
+	private String getNextWord(String nGramMinusOneWord) {
 		// TODO Auto-generated method stub
 		return null;
 	}

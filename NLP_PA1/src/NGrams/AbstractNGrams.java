@@ -30,7 +30,9 @@ public abstract class AbstractNGrams implements INGram
 	@Override
 	public final void computeNGramProbabilities(LinkedList<String> corpus) 
 	{
-		// Count the occurences of each token type
+		double sumOfProbability = 0;
+		int zeroProbCount = 0;
+		// Count the occurrences of each token type
 		if (this.nGramCounts == null)
 			this.countNGram(corpus);
 		
@@ -44,7 +46,44 @@ public abstract class AbstractNGrams implements INGram
 		for(Map.Entry<String, Integer> entry : this.nGramCounts.entrySet())
 		{
 			this.nGramProbabilities.put(entry.getKey(), ((float) entry.getValue()/totalTokens));
+			sumOfProbability += (float) entry.getValue()/totalTokens;
+			if(entry.getValue() == 0)
+				zeroProbCount++;
 		}
+		System.out.println("Sum of all probabilities : " + sumOfProbability);
+		System.out.println("Count of elements with zero probability : "+zeroProbCount);
+	}
+	
+	public final void laplaceSmoothing(LinkedList<String> corpus) 
+	{
+		double sumOfProbability = 0 ;
+		
+		System.out.println("Performing Laplace smoothing..!!");
+		if(this.nGramCounts == null)
+			this.countNGram(corpus);
+		
+		int totalTokens = this.getTotalTokens();
+		
+		for(Map.Entry<String, Integer> entry : this.nGramCounts.entrySet())
+		{
+			this.nGramProbabilities.put(entry.getKey(), ((float) (entry.getValue()+1)/(totalTokens+this.nGramCounts.size())));
+			sumOfProbability += (float) (entry.getValue()+1)/(totalTokens+this.nGramCounts.size());
+		}
+		System.out.println("Sum of all probabilities with laplace smoothing : " + sumOfProbability);
+	}
+	
+	public final double calculatePerplexity() 
+	{
+		System.out.println("\nCalculating perplexity..!!");
+		double perplexity = 0;
+		for(Map.Entry<String, Float> entry : this.nGramProbabilities.entrySet())
+		{
+			perplexity +=Math.log(entry.getValue()); 
+		}
+		//System.out.println("Pre Perplexity: "+ perplexity + ": " + this.nGramProbabilities.size());
+		perplexity = -1 * perplexity / this.nGramProbabilities.size();
+		//System.out.println("Pre antilog: "+perplexity);
+		return Math.pow(Math.E, (perplexity));
 	}
 	
 	private final int getTotalTokens()

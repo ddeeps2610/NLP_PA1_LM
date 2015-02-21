@@ -56,29 +56,30 @@ public class BiGram extends AbstractNGrams
 
 	@Override
 	public String generateRandomSentence() 
-	{  
-		// Complete this TODO -Arpitha
-		// TODO Auto-generated method stub
+	{
 		// Instantiate the Sentence String and initialize it with Start tag <s>
 		StringBuilder randomSentence = new StringBuilder("<s> ");
 		String nMinusOneWord = "<s>";
+		StringBuilder newSentence = new StringBuilder("<s> ");
+		String nthWord;
 		
-		// Recursively fetch the probable next word until the Sentence end <\s> is reached.
-		while(randomSentence.toString().contains("<\\s>"))
+		do
 		{
-			// Approach 1
-			// Fetch all words starting with the N-1 word
+			nthWord = this.getNextWord(nMinusOneWord);
+			if(nthWord.equals("<s>"))
+				continue;
 			
-			// Identify the highest probable word
-			
-			
-			// Approach 2
-			// Sort the map
-			// Fetch first key starting with the given N-1 word
-			
-			// Common:
-			// Append the word
-		}
+			// Assign the nth word to (n-1)th word
+			nMinusOneWord = nthWord;
+			newSentence.append(nthWord + " ");
+		}while(!nthWord.contains("</s>"));
+		
+		
 		return randomSentence.toString();
+	}
+
+	private String getNextWord(String nGramMinusOneWord) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

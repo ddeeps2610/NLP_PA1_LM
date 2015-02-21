@@ -15,4 +15,6 @@ public interface INGram
 	public void computeNGramProbabilities(LinkedList<String> corpus);
 	public void printNGramProbabilities();
 	public String generateRandomSentence();
+	public void laplaceSmoothing(LinkedList<String> corpus);
+	public double calculatePerplexity();
 }
