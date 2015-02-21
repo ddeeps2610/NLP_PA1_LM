@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * @author Deepak
@@ -67,8 +66,6 @@ public abstract class AbstractNGrams implements INGram
 	
 	public final void laplaceSmoothing(LinkedList<String> corpus) 
 	{
-		double sumOfProbability = 0 ;
-		
 		System.out.println("Performing Laplace smoothing..!!");
 		if(this.nGramMap == null)
 			this.countNGram(corpus);

@@ -20,43 +20,47 @@ public class BiGram extends AbstractNGrams
 		if(this.nGramMap == null)
 			this.nGramMap = new HashMap<String, HashMap<String,NthWord>>();
 		
-		HashMap<String, NthWord> nthWordMap = new HashMap<String, NthWord>();
-		
-		StringBuilder nMinus1 = null;
+		String nMinus1;
+		String history;
 		
 		for(String sentenceToken : corpus)
 		{
-			nMinus1 = null;
-			nMinus1.append("");
-			
 			List<String> wordTokens = this.tokenizeSentence(sentenceToken);
+			nMinus1 = "";
+			history = nMinus1;
 			
 			for(String word : wordTokens)
 			{
-				if(this.nGramMap.containsKey(nMinus1))
-				{
-					if(this.nGramMap.get(nMinus1).containsKey(word))
-					{
-						this.nGramMap.get(nMinus1).get(word).setCount(this.nGramMap.get(nMinus1).get(word).getCount()+1);
-					}
-					else
-					{
-						NthWord nthWord = new NthWord();
-						nthWord.setWord(word);
-						nthWord.setCount(1);
-						this.nGramMap.get(nMinus1).put(word, nthWord);
-					}
-					nMinus1 = null;
-					nMinus1.append(word);
-				}
-				else
+				// Add the new history in case the given history is not available.
+				if(!this.nGramMap.containsKey(history))
 				{
 					NthWord nthWord = new NthWord();
 					nthWord.setWord(word);
 					nthWord.setCount(1);
-					this.nGramMap.get(nMinus1).put(word, nthWord);
-					this.nGramMap.put(nMinus1.toString(), null);
+					HashMap<String, NthWord> nthWords = new HashMap<String, NthWord>();
+					nthWords.put(word, nthWord);
+					this.nGramMap.put(history, nthWords);
+					
 				}
+				else
+				{
+					// Add the new Nth Word in case the given nth Word is not available
+					if(!this.nGramMap.get(history).containsKey(word))
+					{
+						NthWord nthWord = new NthWord();
+						nthWord.setWord(word);
+						nthWord.setCount(1);
+						this.nGramMap.get(history).put(word, nthWord);
+						
+					}
+					// Update the count of the nth word in case it is already present.
+					else
+					{
+						this.nGramMap.get(history).get(word).setCount(this.nGramMap.get(nMinus1).get(word).getCount()+1);
+					}
+				}
+				nMinus1 = word;
+				
 			}
 		}
 	}

@@ -4,8 +4,6 @@
 package NGrams;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,13 +35,15 @@ public class UniGram extends AbstractNGrams
 			
 			for(String word : wordTokens)
 			{
+				// Add the nth word if it is already not available.
 				if(!nthWordMap.containsKey(word))
 				{
 					NthWord nthWord = new NthWord();
 					nthWord.setWord(word);
 					nthWord.setCount(1);
-					nthWordMap.put(word, nthWord);					
+					nthWordMap.put(word, nthWord);
 				}
+				// Increment the count of the nth word if it is already available in the corpus.
 				else
 				{
 					nthWordMap.get(word).setCount(nthWordMap.get(word).getCount()+1);
@@ -86,10 +86,6 @@ public class UniGram extends AbstractNGrams
 		return null;
 	}
 	
-	// stores the Map entries in a sorted manner based on "entry" values (if entries are removed/added in the map, sink the list as well (better make the list empty))
-	private List<Entry<String, Float>> sortedProbabilityList  = new ArrayList<Entry<String,Float>>();
-	// not required if we pass the index can be passed (better to pass as parameter)
-	private int nextLargestProbabilityIndex = -1;
 	@Override
 	public double calculateEmailProbability(String email) {
 		// TODO Auto-generated method stub
