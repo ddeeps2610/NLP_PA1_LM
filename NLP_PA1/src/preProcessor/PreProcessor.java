@@ -47,6 +47,10 @@ public class PreProcessor
 	public LinkedList<String> getDownValidation() {
 		return downValidation;
 	}
+	
+	public LinkedList<String> getTestEmails() {
+		return testEmails;
+	}
 	/******************** Business Logic 
 	 * @throws FileNotFoundException **********/
 	public void process(String fileName, InputType inputType) throws FileNotFoundException
@@ -69,15 +73,15 @@ public class PreProcessor
 		{
 		case train:
 			// Segment mails based on the label
-			this.downTrain = this.tokenizeSentences(this.downSpeakEmails);
-			this.upTrain = this.tokenizeSentences(this.upSpeakEmails);
+			this.downTrain = this.tokenizeEmails(this.downSpeakEmails);
+			this.upTrain = this.tokenizeEmails(this.upSpeakEmails);
 			break;
 		case validation:
-			this.downValidation= this.tokenizeSentences(this.downSpeakEmails);
-			this.upValidation = this.tokenizeSentences(this.upSpeakEmails);
+			this.downValidation= this.tokenizeEmails(this.downSpeakEmails);
+			this.upValidation = this.tokenizeEmails(this.upSpeakEmails);
 			break;
 		case test:
-			this.upDownTest = this.tokenizeSentences(this.testEmails);
+			this.upDownTest = this.tokenizeEmails(this.testEmails);
 			break;
 			default:
 				System.out.println("Wrong Input file type. Please Enter 0->Train 1->Validation 2->Test");
@@ -154,7 +158,7 @@ public class PreProcessor
 		}
 	}
 	
-	private LinkedList<String> tokenizeSentences(LinkedList<String> emailList)
+	public static LinkedList<String> tokenizeEmails(LinkedList<String> emailList)
 	{
 		LinkedList<String> corpus = null;
 		for(String email : emailList)
@@ -176,5 +180,11 @@ public class PreProcessor
 			}
 		}
 		return corpus;
+	}
+	
+	public static LinkedList<String> tokenizeEmails(String email)
+	{
+		return null;
+		
 	}
 }

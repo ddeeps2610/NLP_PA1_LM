@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import preProcessor.PreProcessor;
+
 /**
  * @author Deepak
  *
@@ -87,8 +89,44 @@ public class UniGram extends AbstractNGrams
 	}
 	
 	@Override
-	public double calculateEmailProbability(String email) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double calculateEmailProbability(String email) 
+	{
+		double emailProbability = 0.0;
+		
+		List<String> sentences = PreProcessor.tokenizeEmails(email);
+
+		// Loop over all sentences
+		for(String sentence: sentences)
+		{
+			// Tokenize each sentence
+			List<String> wordTokens = this.tokenizeSentence(sentence);
+			String history = "";
+			
+			double prob = 0.0;
+			// Calculate the probability for each word
+			for(String word : wordTokens)
+			{
+				// Check if the required history is present.
+				// For unigram, there is no history. Its only ""
+				if(!this.nGramMap.containsKey(history))
+				{
+					prob = getUnknownProb();
+					System.err.println("Error in calculating the probability in Unigram.");
+				}
+				// Always enters this
+				else
+				{
+					if(!this.nGramMap.get(history).containsKey(word))
+						prob = getUnknownProb();
+					else
+						prob = this.nGramMap.get(history).get(word).getProbability();
+				}
+				// Add the log of the probability for easier calculations
+				emailProbability += Math.log(prob);
+			}
+		}
+		// Return the antilog of the log of probabilities.
+		return Math.pow(Math.E, emailProbability);
 	}
+
 }

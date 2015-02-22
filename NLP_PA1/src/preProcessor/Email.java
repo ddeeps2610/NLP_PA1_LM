@@ -4,7 +4,7 @@ public class Email
 {
 	private String email;
 	private int id;
-	private boolean stream;
+	private SpeakOrder speak;
 	private double upStreamProb;
 	private double downStremProb;
 	
@@ -33,12 +33,13 @@ public class Email
 	public void setId(int id) {
 		this.id = id;
 	}
-	public boolean isStream() {
-		return stream;
+	public SpeakOrder getSpeak() {
+		return speak;
 	}
-	public void setStream(boolean stream) {
-		this.stream = stream;
+	public void setSpeak(SpeakOrder speak) {
+		this.speak = speak;
 	}
+	
 	
 	
 }

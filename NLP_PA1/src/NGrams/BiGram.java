@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import preProcessor.PreProcessor;
+
 /**
  * @author Deepak
  *
@@ -60,7 +62,7 @@ public class BiGram extends AbstractNGrams
 					}
 				}
 				nMinus1 = word;
-				
+				history = nMinus1;
 			}
 		}
 	}
@@ -95,8 +97,42 @@ public class BiGram extends AbstractNGrams
 	}
 
 	@Override
-	public double calculateEmailProbability(String email) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double calculateEmailProbability(String email) 
+	{
+		double emailProbability = 0.0;
+		
+		List<String> sentences = PreProcessor.tokenizeEmails(email);
+		
+		for(String sentence: sentences)
+		{
+			List<String> wordTokens = this.tokenizeSentence(sentence);
+			String nMinus1 = "";
+			String history = nMinus1 ;
+			
+			double prob = 0.0;
+			for(String word : wordTokens)
+			{
+				if(!this.nGramMap.containsKey(history))
+				{
+					prob = getUnknownProb();
+				}
+				else
+				{
+					if(!this.nGramMap.get(history).containsKey(word))
+						prob = getUnknownProb();
+					else
+					{
+						prob = this.nGramMap.get(history).get(word).getProbability();
+					}
+				}
+				nMinus1 = word;
+				history = nMinus1;
+				
+				emailProbability += Math.log(prob);
+			}
+		}
+		
+		return Math.pow(Math.E, emailProbability);
 	}
+
 }

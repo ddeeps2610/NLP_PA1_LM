@@ -63,6 +63,10 @@ public abstract class AbstractNGrams implements INGram
 	{
 		return null;
 	}
+	protected double getUnknownProb() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	public final void laplaceSmoothing(LinkedList<String> corpus) 
 	{

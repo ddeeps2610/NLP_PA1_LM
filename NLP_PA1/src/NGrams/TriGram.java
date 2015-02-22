@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import preProcessor.PreProcessor;
+
 /**
  * @author Deepak
  *
@@ -32,10 +34,12 @@ public class TriGram extends AbstractNGrams
 			List<String> wordTokens = this.tokenizeSentence(sentenceToken);
 			nMinus1 = "";
 			nMinus2 = "";
-			history = nMinus2 + nMinus1;
+			
 			
 			for(String word : wordTokens)
 			{
+				history = nMinus2 + nMinus1;
+				
 				// Add the new history in case the given history is not available.
 				if(!this.nGramMap.containsKey(history))
 				{
@@ -97,7 +101,8 @@ public class TriGram extends AbstractNGrams
 		return randomSentence.toString();
 	}
 
-	private String getNextWord(String nGramMinusOneWord) {
+	private String getNextWord(String nGramMinusOneWord) 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -105,13 +110,45 @@ public class TriGram extends AbstractNGrams
 	@Override
 	public double calculateEmailProbability(String email) 
 	{
-		String[] words = email.split(" ");
-		for(String nGram : words)
+		double emailProbability = 0.0;
+		
+		List<String> sentences = PreProcessor.tokenizeEmails(email);
+		
+		for(String sentence: sentences)
 		{
+			List<String> wordTokens = this.tokenizeSentence(sentence);
+			String nMinus1 = "";
+			String nMinus2 = "";
+			String history = nMinus2 + nMinus1;
 			
+			double prob = 0.0;
+			for(String word : wordTokens)
+			{
+				if(!this.nGramMap.containsKey(history))
+				{
+					prob = getUnknownProb();
+				}
+				else
+				{
+					if(!this.nGramMap.get(history).containsKey(word))
+						prob = getUnknownProb();
+					else
+					{
+						prob = this.nGramMap.get(history).get(word).getProbability();
+					}
+				}
+				nMinus2 = nMinus1;
+				nMinus1 = word;
+				history = nMinus2 + nMinus1;
+				
+				emailProbability += Math.log(prob);
+			}
 		}
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return Math.pow(Math.E, emailProbability);
 	}
+	
+	
+
 
 }
