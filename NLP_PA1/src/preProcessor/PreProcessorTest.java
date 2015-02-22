@@ -32,12 +32,12 @@ public class PreProcessorTest
 			// Unigram
 			INGram uniGramUpTrain = new UniGram();
 			uniGramUpTrain.computeNGramProbabilities(upTrain);
-			//uniGramUpTrain.printNGramProbabilities();
+			uniGramUpTrain.printNGramProbabilities();
 			//uniGramUpTrain.generateRandomSentence();
-			uniGramUpTrain.laplaceSmoothing(upTrain);
-			double unigramPerplexity = uniGramUpTrain.calculatePerplexity();
-			System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
-			
+			//uniGramUpTrain.laplaceSmoothing(upTrain);
+			//double unigramPerplexity = uniGramUpTrain.calculatePerplexity();
+			//System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
+			/*
 			// Bigram
 			INGram biGramUpTrain = new BiGram();
 			biGramUpTrain.computeNGramProbabilities(upTrain);
@@ -112,6 +112,7 @@ public class PreProcessorTest
 				email.setSpeak(upstreamProb > downstreamProb ?SpeakOrder.UpSpeak :SpeakOrder.DownSpeak);
 				System.out.println("Email ID:Speak :: " + email.getId() + ":"+email.getSpeak());
 			}
+			*/
 			
 		} catch (FileNotFoundException e) {
 			System.out.println("File not initialized properly");

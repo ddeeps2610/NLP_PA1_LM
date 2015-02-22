@@ -94,7 +94,7 @@ public class UniGram extends AbstractNGrams
 	{
 		double emailProbability = 0.0;
 		
-		List<String> sentences = PreProcessor.tokenizeEmails(email.getEmail());
+		List<String> sentences = PreProcessor.tokenizeEmails(email);
 
 		// Loop over all sentences
 		for(String sentence: sentences)

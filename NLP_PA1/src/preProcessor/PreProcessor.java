@@ -4,7 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.process.DocumentPreprocessor;
 
 /**
  * 
@@ -74,15 +82,15 @@ public class PreProcessor
 		{
 		case train:
 			// Segment mails based on the label
-			this.downTrain = this.tokenizeEmails(this.downSpeakEmails);
-			this.upTrain = this.tokenizeEmails(this.upSpeakEmails);
+			this.downTrain = (LinkedList<String>) PreProcessor.tokenizeEmails(this.downSpeakEmails);
+			this.upTrain = (LinkedList<String>) PreProcessor.tokenizeEmails(this.upSpeakEmails);
 			break;
 		case validation:
-			this.downValidation= this.tokenizeEmails(this.downSpeakEmails);
-			this.upValidation = this.tokenizeEmails(this.upSpeakEmails);
+			this.downValidation= (LinkedList<String>) PreProcessor.tokenizeEmails(this.downSpeakEmails);
+			this.upValidation = (LinkedList<String>) PreProcessor.tokenizeEmails(this.upSpeakEmails);
 			break;
 		case test:
-			this.upDownTest = this.tokenizeEmails(this.testEmails);
+			this.upDownTest = (LinkedList<String>) PreProcessor.tokenizeEmails(this.testEmails);
 			break;
 			default:
 				System.out.println("Wrong Input file type. Please Enter 0->Train 1->Validation 2->Test");
@@ -100,9 +108,10 @@ public class PreProcessor
 		StringBuilder email= null;
 		try 
 		{
+			Email newEmail  = null;
 			while((line = this.input.readLine()) != null)
 			{
-				Email newEmail  = null;
+				
 				int id = 0;
 				if(line.contains("**START**"))
 				{
@@ -181,33 +190,35 @@ public class PreProcessor
 	    return true;
 	}
 	
-	public static LinkedList<String> tokenizeEmails(LinkedList<Email> emailList)
-	{
-		LinkedList<String> corpus = null;
-		for(Email email : emailList)
-		{
-			String[] emailCorpus = email.getEmail().split("\\.");
-			for(String sentence: emailCorpus)
-			{
-				if(sentence != null && sentence.length() > 0)
-				{
-					StringBuilder sentenceToken = new StringBuilder("<s> ");
-					sentenceToken.append(sentence);
-					sentenceToken.append(" </s>");
-					
-					if(corpus == null)
-						corpus = new LinkedList<String>();
-					corpus.add(sentenceToken.toString());
-					sentenceToken = null;
-				}
-			}
+	
+	public static  List<String> tokenizeEmails(Email email) {
+		List<String> corpus = new ArrayList<String>();
+		Reader reader = new StringReader(email.getEmail());
+		DocumentPreprocessor dp = new DocumentPreprocessor(reader);
+
+		Iterator<List<HasWord>> it = dp.iterator();
+		while (it.hasNext()) {
+		   StringBuilder sentenceSb = new StringBuilder();
+		   List<HasWord> sentence = it.next();
+		   for (HasWord token : sentence) {
+		      if(sentenceSb.length()>1) {
+		         sentenceSb.append(" ");
+		      }
+		      sentenceSb.append(token);
+		   }
+		   corpus.add("<s> " + sentenceSb.toString() + " </s>");
 		}
 		return corpus;
 	}
 	
-	public static LinkedList<String> tokenizeEmails(String email)
+	public static List<String> tokenizeEmails(LinkedList<Email> emailList)
 	{
-		return null;
+		LinkedList<String> corpus = new LinkedList<String>();
 		
+		for(Email email : emailList) {
+			corpus.addAll(PreProcessor.tokenizeEmails(email));
+		}
+		return corpus;
 	}
+	
 }

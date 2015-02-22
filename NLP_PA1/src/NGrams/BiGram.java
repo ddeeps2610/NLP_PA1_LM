@@ -102,7 +102,7 @@ public class BiGram extends AbstractNGrams
 	{
 		double emailProbability = 0.0;
 		
-		List<String> sentences = PreProcessor.tokenizeEmails(email.getEmail());
+		List<String> sentences = PreProcessor.tokenizeEmails(email);
 		
 		for(String sentence: sentences)
 		{

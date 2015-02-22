@@ -3,10 +3,16 @@
  */
 package NGrams;
 
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.process.CoreLabelTokenFactory;
+import edu.stanford.nlp.process.PTBTokenizer;
 
 /**
  * @author Deepak
@@ -42,7 +48,7 @@ public abstract class AbstractNGrams implements INGram
 		{
 			if((nGramEntry.getValue() != null) && (!nGramEntry.getValue().isEmpty()))
 			{
-				int count = 0;
+				double count = 0;
 				// Count the total occurences of the given (n-1) words
 				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
 				{
@@ -59,9 +65,18 @@ public abstract class AbstractNGrams implements INGram
 		}	
 	}
 	
-	protected List<String> tokenizeSentence (String sentence)
+	
+	@SuppressWarnings("rawtypes")
+	protected List<String> tokenizeSentence (String sentence1)
 	{
-		return null;
+		List<String> retVal = new ArrayList<String>();
+		@SuppressWarnings("unchecked")
+		PTBTokenizer ptbt = new PTBTokenizer(new StringReader(sentence1), new CoreLabelTokenFactory(), "");
+	      for (CoreLabel label; ptbt.hasNext(); ) {
+	        label = (CoreLabel) ptbt.next();
+	        retVal.add(label.value());
+	      }
+		return retVal;
 	}
 	protected double getUnknownProb() {
 		// TODO Auto-generated method stub
