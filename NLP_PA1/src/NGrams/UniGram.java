@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import preProcessor.Email;
 import preProcessor.PreProcessor;
 
 /**
@@ -89,11 +90,11 @@ public class UniGram extends AbstractNGrams
 	}
 	
 	@Override
-	public double calculateEmailProbability(String email) 
+	public double calculateEmailProbability(Email email) 
 	{
 		double emailProbability = 0.0;
 		
-		List<String> sentences = PreProcessor.tokenizeEmails(email);
+		List<String> sentences = PreProcessor.tokenizeEmails(email.getEmail());
 
 		// Loop over all sentences
 		for(String sentence: sentences)

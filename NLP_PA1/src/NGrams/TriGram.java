@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import preProcessor.Email;
 import preProcessor.PreProcessor;
 
 /**
@@ -108,11 +109,11 @@ public class TriGram extends AbstractNGrams
 	}
 
 	@Override
-	public double calculateEmailProbability(String email) 
+	public double calculateEmailProbability(Email email) 
 	{
 		double emailProbability = 0.0;
 		
-		List<String> sentences = PreProcessor.tokenizeEmails(email);
+		List<String> sentences = PreProcessor.tokenizeEmails(email.getEmail());
 		
 		for(String sentence: sentences)
 		{

@@ -96,23 +96,21 @@ public class PreProcessorTest
 			PreProcessor contestPreProcessor = new PreProcessor();
 			contestPreProcessor.process(".\\InputFiles\\test.txt", InputType.train);
 			LinkedList<String> upDownTest= contestPreProcessor.getUpDownTest();
-			LinkedList<String> testEmails = contestPreProcessor.getTestEmails();
+			LinkedList<Email> testEmails = contestPreProcessor.getTestEmails();
 			
 			// Result storage
 			int i = 0;
 			HashMap<Integer,Integer> guesses = new HashMap<Integer, Integer>();
-			for(String email : testEmails)
+			for(Email email : testEmails)
 			{
 				double upstreamProb = triGramUpTrain.calculateEmailProbability(email);
 				double downstreamProb = triGramDownTrain.calculateEmailProbability(email);
-				Email newMail = new Email();
 				
-				newMail.setEmail(email);
-				newMail.setId(i++);
-				newMail.setDownStremProb(downstreamProb);
-				newMail.setUpStreamProb(upstreamProb);
-				newMail.setSpeak(upstreamProb > downstreamProb ?SpeakOrder.UpSpeak :SpeakOrder.DownSpeak);
-				System.out.println("Email ID:Speak :: " + newMail.getId() + ":"+newMail.getSpeak());
+				
+				email.setDownStremProb(downstreamProb);
+				email.setUpStreamProb(upstreamProb);
+				email.setSpeak(upstreamProb > downstreamProb ?SpeakOrder.UpSpeak :SpeakOrder.DownSpeak);
+				System.out.println("Email ID:Speak :: " + email.getId() + ":"+email.getSpeak());
 			}
 			
 		} catch (FileNotFoundException e) {

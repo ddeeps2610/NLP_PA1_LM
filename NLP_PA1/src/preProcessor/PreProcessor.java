@@ -24,9 +24,9 @@ public class PreProcessor
 	private LinkedList<String> upDownTest;
 
 	/**************** Segmented Email buffers **************/
-	private LinkedList<String> upSpeakEmails;
-	private LinkedList<String> downSpeakEmails;
-	private LinkedList<String> testEmails;
+	private LinkedList<Email> upSpeakEmails;
+	private LinkedList<Email> downSpeakEmails;
+	private LinkedList<Email> testEmails;
 	
 	/******************* Input Handler *********************/
 	private BufferedReader input;
@@ -48,11 +48,11 @@ public class PreProcessor
 		return downValidation;
 	}
 	
-	public LinkedList<String> getTestEmails() {
+	public LinkedList<Email> getTestEmails() {
 		return testEmails;
 	}
-	/******************** Business Logic 
-	 * @throws FileNotFoundException **********/
+	/******************** Business Logic **********/
+	 /* @throws FileNotFoundException */
 	public void process(String fileName, InputType inputType) throws FileNotFoundException
 	{
 		File inputFile = new File(fileName);
@@ -60,6 +60,7 @@ public class PreProcessor
 		if(!(inputFile.exists() && inputFile.isFile() && inputFile.canRead()))
 		{
 			System.out.println("Either the file doesn;t exist or it is not a file or can;t be read...!!!");
+			System.exit(0);
 			throw new FileNotFoundException();	
 		}
 		
@@ -101,10 +102,13 @@ public class PreProcessor
 		{
 			while((line = this.input.readLine()) != null)
 			{
+				Email newEmail  = null;
+				int id = 0;
 				if(line.contains("**START**"))
 				{
 					mailReadFlag = true;
 					email = new StringBuilder();
+					newEmail= new Email();
 				}
 				else if(line.contains("**EOM**"))
 				{
@@ -112,24 +116,32 @@ public class PreProcessor
 					if(upSpeak)
 					{
 						if(this.upSpeakEmails == null)
-							this.upSpeakEmails = new LinkedList<String>();
-						this.upSpeakEmails.add(email.toString());
+							this.upSpeakEmails = new LinkedList<Email>();
+						
+						newEmail.setEmail(email.toString());
+						newEmail.setSpeak(SpeakOrder.UpSpeak);
+						this.upSpeakEmails.add(newEmail);
 						email = null;
 						upSpeak = false;
 					}
 					else if(downSpeak)
 					{
 						if(this.downSpeakEmails == null)
-							this.downSpeakEmails = new LinkedList<String>();
-						this.downSpeakEmails.add(email.toString());
+							this.downSpeakEmails = new LinkedList<Email>();
+						newEmail.setEmail(email.toString());
+						newEmail.setSpeak(SpeakOrder.DownSpeak);
+						this.downSpeakEmails.add(newEmail);
 						email = null;
 						downSpeak = false;
 					}
 					else //if(!upSpeak && !downSpeak)
 					{
 						if(this.testEmails == null)
-							this.testEmails = new LinkedList<String>();
-						this.testEmails.add(email.toString());
+							this.testEmails = new LinkedList<Email>();
+						
+						newEmail.setEmail(email.toString());
+						newEmail.setId(id);
+						this.testEmails.add(newEmail);
 						email = null;
 					}
 				}
@@ -143,6 +155,8 @@ public class PreProcessor
 				}
 				else
 				{
+					if(PreProcessor.isInteger(line))
+						id = Integer.parseInt(line);
 					if (mailReadFlag && email != null)
 						email.append(line);
 				}
@@ -152,18 +166,27 @@ public class PreProcessor
 		}
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
 			System.out.println("Unable to read the file. Some problem with the IO.");
 			e.printStackTrace();
 		}
 	}
 	
-	public static LinkedList<String> tokenizeEmails(LinkedList<String> emailList)
+	private static boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
+	
+	public static LinkedList<String> tokenizeEmails(LinkedList<Email> emailList)
 	{
 		LinkedList<String> corpus = null;
-		for(String email : emailList)
+		for(Email email : emailList)
 		{
-			String[] emailCorpus = email.split("\\.");
+			String[] emailCorpus = email.getEmail().split("\\.");
 			for(String sentence: emailCorpus)
 			{
 				if(sentence != null && sentence.length() > 0)
