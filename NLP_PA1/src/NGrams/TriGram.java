@@ -39,7 +39,7 @@ public class TriGram extends AbstractNGrams
 			
 			for(String word : wordTokens)
 			{
-				history = nMinus2 + nMinus1;
+				history = nMinus2 +" " + nMinus1;
 				
 				// Add the new history in case the given history is not available.
 				if(!this.nGramMap.containsKey(history))
@@ -47,6 +47,7 @@ public class TriGram extends AbstractNGrams
 					NthWord nthWord = new NthWord();
 					nthWord.setWord(word);
 					nthWord.setCount(1);
+					
 					HashMap<String, NthWord> nthWords = new HashMap<String, NthWord>();
 					nthWords.put(word, nthWord);
 					this.nGramMap.put(history, nthWords);
@@ -120,19 +121,20 @@ public class TriGram extends AbstractNGrams
 			List<String> wordTokens = this.tokenizeSentence(sentence);
 			String nMinus1 = "";
 			String nMinus2 = "";
-			String history = nMinus2 + nMinus1;
+			String history = nMinus2 +" " + nMinus1;
+			
 			
 			double prob = 0.0;
 			for(String word : wordTokens)
 			{
 				if(!this.nGramMap.containsKey(history))
 				{
-					prob = getUnknownProb();
+					prob = getUnknownProb(history);
 				}
 				else
 				{
 					if(!this.nGramMap.get(history).containsKey(word))
-						prob = getUnknownProb();
+						prob = getUnknownProb(history);
 					else
 					{
 						prob = this.nGramMap.get(history).get(word).getProbability();
@@ -140,7 +142,8 @@ public class TriGram extends AbstractNGrams
 				}
 				nMinus2 = nMinus1;
 				nMinus1 = word;
-				history = nMinus2 + nMinus1;
+				history = nMinus2 +" " + nMinus1;
+				
 				
 				if(prob != 0)
 					emailProbability += Math.log(prob);

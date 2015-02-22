@@ -3,7 +3,7 @@ package NGrams;
 public class NthWord 
 {
 	private String word;
-	private int count;
+	private double count;
 	private double probability;
 	
 	public String getWord() {
@@ -12,10 +12,10 @@ public class NthWord
 	public void setWord(String word) {
 		this.word = word;
 	}
-	public int getCount() {
+	public double getCount() {
 		return count;
 	}
-	public void setCount(int count) {
+	public void setCount(double count) {
 		this.count = count;
 	}
 	public double getProbability() {

@@ -111,14 +111,14 @@ public class UniGram extends AbstractNGrams
 				// For unigram, there is no history. Its only ""
 				if(!this.nGramMap.containsKey(history))
 				{
-					prob = getUnknownProb();
+					prob = getUnknownProb(history);
 					System.err.println("Error in calculating the probability in Unigram.");
 				}
 				// Always enters this
 				else
 				{
 					if(!this.nGramMap.get(history).containsKey(word))
-						prob = getUnknownProb();
+						prob = getUnknownProb(history);
 					else
 						prob = this.nGramMap.get(history).get(word).getProbability();
 				}

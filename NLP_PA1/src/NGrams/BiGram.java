@@ -115,12 +115,12 @@ public class BiGram extends AbstractNGrams
 			{
 				if(!this.nGramMap.containsKey(history))
 				{
-					prob = getUnknownProb();
+					prob = getUnknownProb(history);
 				}
 				else
 				{
 					if(!this.nGramMap.get(history).containsKey(word))
-						prob = getUnknownProb();
+						prob = getUnknownProb(history);
 					else
 					{
 						prob = this.nGramMap.get(history).get(word).getProbability();

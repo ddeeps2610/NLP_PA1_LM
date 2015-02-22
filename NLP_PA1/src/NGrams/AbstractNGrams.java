@@ -58,7 +58,7 @@ public abstract class AbstractNGrams implements INGram
 				// Calculate and assign probabilities
 				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
 				{
-					int occurrence = nThWordEntry.getValue().getCount();
+					double occurrence = nThWordEntry.getValue().getCount();
 					nThWordEntry.getValue().setProbability(occurrence/count);
 				}
 			}
@@ -78,9 +78,19 @@ public abstract class AbstractNGrams implements INGram
 	      }
 		return retVal;
 	}
-	protected double getUnknownProb() {
-		// TODO Auto-generated method stub
-		return 0;
+	protected double getUnknownProb(String key) 
+	{
+		double N1 = this.calculateUnknownCount(key);
+		double count = 0;
+		
+		// Count the total occurrences of the given (n-1) words
+		for(Map.Entry<String, HashMap<String, NthWord>> nGramEntry : this.nGramMap.entrySet())
+			for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
+			{
+				count += nThWordEntry.getValue().getCount();
+			}
+		
+		return (N1/count);
 	}
 	
 	public final void laplaceSmoothing(LinkedList<String> corpus) 
@@ -104,13 +114,53 @@ public abstract class AbstractNGrams implements INGram
 				// Calculate and assign probabilities
 				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
 				{
-					int occurrence = nThWordEntry.getValue().getCount();
+					double occurrence = nThWordEntry.getValue().getCount();
 					nThWordEntry.getValue().setProbability((occurrence+1)/(count+nGramEntry.getValue().size()));
 				}
 			}
 		}		
 	}
 	
+	public final void deepakSmoothing(LinkedList<String> corpus) 
+	{
+		System.out.println("\nPerforming Laplace smoothing..!!");
+		if(this.nGramMap == null)
+			this.countNGram(corpus);
+		
+		
+		// Calculate the probability of each token type in the corpus
+		for(Map.Entry<String, HashMap<String, NthWord>> nGramEntry : this.nGramMap.entrySet())
+		{
+			
+			if((nGramEntry.getValue() != null) && (!nGramEntry.getValue().isEmpty()))
+			{
+				double unknownCount = this.calculateUnknownCount(nGramEntry.getKey());
+				
+				double count = 0;
+				// Count the total occurrences of the given (n-1) words
+				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
+				{
+					count += nThWordEntry.getValue().getCount();
+				}
+				
+				// Calculate and assign probabilities
+				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
+				{
+					double occurrence = nThWordEntry.getValue().getCount()* (count - unknownCount)/count;
+					nThWordEntry.getValue().setCount(occurrence);
+					nThWordEntry.getValue().setProbability(occurrence/count);
+				}
+			}
+		}		
+	}
+	
+	private double calculateUnknownCount(String key) 
+	{
+		return 0;
+		// TODO Auto-generated method stub
+		
+	}
+
 	public final double calculatePerplexity() 
 	{
 		System.out.println("\nCalculating perplexity..!!");
@@ -166,7 +216,8 @@ public abstract class AbstractNGrams implements INGram
 		    	for(Map.Entry<String, NthWord> nthWordENtry : entry.getValue().entrySet())
 		    	{
 		    		totalProb += nthWordENtry.getValue().getProbability();
-		    		System.out.println(nthWordENtry.getKey() + " : " + nthWordENtry.getValue().getProbability());
+		    		System.out.println(entry.getKey()+" " +nthWordENtry.getKey() + " : " + nthWordENtry.getValue().getProbability());
+		    		
 		    	}
 		    }			
 		}

@@ -36,7 +36,7 @@ public class PreProcessorTest
 			//uniGramUpTrain.printNGramProbabilities();
 			//uniGramUpTrain.generateRandomSentence();
 			uniGramUpTrain.laplaceSmoothing(upTrain);
-			//uniGramUpTrain.printNGramProbabilities();
+			uniGramUpTrain.printNGramProbabilities();
 			double unigramPerplexity = uniGramUpTrain.calculatePerplexity();
 			System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
 			
@@ -73,7 +73,7 @@ public class PreProcessorTest
 			// Bigram
 			INGram biGramDownTrain = new BiGram();
 			biGramDownTrain.computeNGramProbabilities(downTrain);
-			//biGramDownTrain.printNGramProbabilities();
+			biGramDownTrain.printNGramProbabilities();
 			//biGramDownTrain.generateRandomSentence();
 			biGramDownTrain.laplaceSmoothing(downTrain);
 			double biDownPerplexity = biGramDownTrain.calculatePerplexity();
@@ -114,7 +114,7 @@ public class PreProcessorTest
 				email.setUpStreamProb(upstreamProb);
 				email.setSpeak(upstreamProb > downstreamProb ?SpeakOrder.UpSpeak :SpeakOrder.DownSpeak);
 				guesses.put(email.getId(), email.getSpeak());
-				System.out.println("Email ID:Speak:UpProb:DownProb :: " + email.getId() + ":"+email.getSpeak()+ ":"+email.getUpStreamProb()+":"+email.getDownStremProb());
+				//System.out.println("Email ID:Speak:UpProb:DownProb :: " + email.getId() + ":"+email.getSpeak()+ ":"+email.getUpStreamProb()+":"+email.getDownStremProb());
 			}
 			
 			
