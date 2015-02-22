@@ -66,7 +66,7 @@ public class TriGram extends AbstractNGrams
 					// Update the count of the nth word in case it is already present.
 					else
 					{
-						this.nGramMap.get(history).get(word).setCount(this.nGramMap.get(nMinus1).get(word).getCount()+1);
+						this.nGramMap.get(history).get(word).setCount(this.nGramMap.get(history).get(word).getCount()+1);
 					}
 				}
 				nMinus2 = nMinus1;
@@ -142,10 +142,11 @@ public class TriGram extends AbstractNGrams
 				nMinus1 = word;
 				history = nMinus2 + nMinus1;
 				
-				emailProbability += Math.log(prob);
+				if(prob != 0)
+					emailProbability += Math.log(prob);
 			}
 		}
-		
+		//System.out.println("Log(Prob) = "+emailProbability);
 		return Math.pow(Math.E, emailProbability);
 	}
 	

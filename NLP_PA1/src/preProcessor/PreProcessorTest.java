@@ -32,18 +32,21 @@ public class PreProcessorTest
 			// Unigram
 			INGram uniGramUpTrain = new UniGram();
 			uniGramUpTrain.computeNGramProbabilities(upTrain);
-			uniGramUpTrain.printNGramProbabilities();
+			
+			//uniGramUpTrain.printNGramProbabilities();
 			//uniGramUpTrain.generateRandomSentence();
-			//uniGramUpTrain.laplaceSmoothing(upTrain);
-			//double unigramPerplexity = uniGramUpTrain.calculatePerplexity();
-			//System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
-			/*
+			uniGramUpTrain.laplaceSmoothing(upTrain);
+			//uniGramUpTrain.printNGramProbabilities();
+			double unigramPerplexity = uniGramUpTrain.calculatePerplexity();
+			System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
+			
 			// Bigram
 			INGram biGramUpTrain = new BiGram();
 			biGramUpTrain.computeNGramProbabilities(upTrain);
 			//biGramUpTrain.printNGramProbabilities();
 			//biGramUpTrain.generateRandomSentence();
 			biGramUpTrain.laplaceSmoothing(upTrain);
+			//biGramUpTrain.printNGramProbabilities();
 			double bigramPerplexity = biGramUpTrain.calculatePerplexity();
 			System.out.println("Perplexity for the bigram Model : "+bigramPerplexity);
 			
@@ -53,7 +56,8 @@ public class PreProcessorTest
 			//triGramUpTrain.printNGramProbabilities();
 			//triGramUpTrain.generateRandomSentence();
 			triGramUpTrain.laplaceSmoothing(upTrain);
-			double trigramPerplexity = biGramUpTrain.calculatePerplexity();
+			//triGramUpTrain.printNGramProbabilities();
+			double trigramPerplexity = triGramUpTrain.calculatePerplexity();
 			System.out.println("Perplexity for the trigram Model : "+trigramPerplexity);
 			
 			// DownTrain Models
@@ -94,25 +98,25 @@ public class PreProcessorTest
 			
 			// Contest - Test your Up and Down Trained modules for the test mails
 			PreProcessor contestPreProcessor = new PreProcessor();
-			contestPreProcessor.process(".\\InputFiles\\test.txt", InputType.train);
-			LinkedList<String> upDownTest= contestPreProcessor.getUpDownTest();
+			contestPreProcessor.process(".\\InputFiles\\test.txt", InputType.test);
 			LinkedList<Email> testEmails = contestPreProcessor.getTestEmails();
 			
 			// Result storage
-			int i = 0;
-			HashMap<Integer,Integer> guesses = new HashMap<Integer, Integer>();
+			int upSpeakCount = 0;
+			int downSpeakCount = 0;
+			HashMap<Integer,SpeakOrder> guesses = new HashMap<Integer, SpeakOrder>();
 			for(Email email : testEmails)
 			{
 				double upstreamProb = triGramUpTrain.calculateEmailProbability(email);
 				double downstreamProb = triGramDownTrain.calculateEmailProbability(email);
 				
-				
 				email.setDownStremProb(downstreamProb);
 				email.setUpStreamProb(upstreamProb);
 				email.setSpeak(upstreamProb > downstreamProb ?SpeakOrder.UpSpeak :SpeakOrder.DownSpeak);
-				System.out.println("Email ID:Speak :: " + email.getId() + ":"+email.getSpeak());
+				guesses.put(email.getId(), email.getSpeak());
+				System.out.println("Email ID:Speak:UpProb:DownProb :: " + email.getId() + ":"+email.getSpeak()+ ":"+email.getUpStreamProb()+":"+email.getDownStremProb());
 			}
-			*/
+			
 			
 		} catch (FileNotFoundException e) {
 			System.out.println("File not initialized properly");

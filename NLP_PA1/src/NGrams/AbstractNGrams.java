@@ -85,7 +85,7 @@ public abstract class AbstractNGrams implements INGram
 	
 	public final void laplaceSmoothing(LinkedList<String> corpus) 
 	{
-		System.out.println("Performing Laplace smoothing..!!");
+		System.out.println("\nPerforming Laplace smoothing..!!");
 		if(this.nGramMap == null)
 			this.countNGram(corpus);
 		
@@ -94,8 +94,8 @@ public abstract class AbstractNGrams implements INGram
 		{
 			if((nGramEntry.getValue() != null) && (!nGramEntry.getValue().isEmpty()))
 			{
-				int count = 0;
-				// Count the total occurences of the given (n-1) words
+				double count = 0;
+				// Count the total occurrences of the given (n-1) words
 				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
 				{
 					count += nThWordEntry.getValue().getCount();
@@ -129,7 +129,7 @@ public abstract class AbstractNGrams implements INGram
 		
 		//System.out.println("Pre Perplexity: "+ perplexity + ": " + this.nGramProbabilities.size());
 		perplexity = -1 * perplexity / count;
-		
+		System.out.println("Token types: " + count);
 		//System.out.println("Pre antilog: "+perplexity);
 		return Math.pow(Math.E, (perplexity));
 	}
@@ -158,16 +158,19 @@ public abstract class AbstractNGrams implements INGram
 	@Override
 	public final void printNGramProbabilities() 
 	{
+		double totalProb = 0.0;
 		if(this.nGramMap != null)
 		{
 			for(Map.Entry<String, HashMap<String, NthWord>> entry : this.nGramMap.entrySet())
 		    {
 		    	for(Map.Entry<String, NthWord> nthWordENtry : entry.getValue().entrySet())
 		    	{
+		    		totalProb += nthWordENtry.getValue().getProbability();
 		    		System.out.println(nthWordENtry.getKey() + " : " + nthWordENtry.getValue().getProbability());
 		    	}
 		    }			
 		}
+		System.out.println("Total Probability: " + totalProb);
 	}
 
 }

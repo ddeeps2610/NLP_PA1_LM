@@ -109,10 +109,11 @@ public class PreProcessor
 		try 
 		{
 			Email newEmail  = null;
+			int id = 0;
 			while((line = this.input.readLine()) != null)
 			{
 				
-				int id = 0;
+				
 				if(line.contains("**START**"))
 				{
 					mailReadFlag = true;
