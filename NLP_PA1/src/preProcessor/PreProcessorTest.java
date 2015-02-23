@@ -22,6 +22,7 @@ public class PreProcessorTest
 	{
 		try 
 		{
+			long startTime = System.currentTimeMillis();
 			PreProcessor preProcessor = new PreProcessor();
 			
 			preProcessor.process(".\\InputFiles\\training.txt", InputType.train);
@@ -101,6 +102,8 @@ public class PreProcessorTest
 			contestPreProcessor.process(".\\InputFiles\\test.txt", InputType.test);
 			LinkedList<Email> testEmails = contestPreProcessor.getTestEmails();
 			
+			//triGramUpTrain.deepakSmoothing(upTrain);
+			//triGramDownTrain.deepakSmoothing(downTrain);
 			// Result storage
 			int upSpeakCount = 0;
 			int downSpeakCount = 0;
@@ -114,9 +117,10 @@ public class PreProcessorTest
 				email.setUpStreamProb(upstreamProb);
 				email.setSpeak(upstreamProb > downstreamProb ?SpeakOrder.UpSpeak :SpeakOrder.DownSpeak);
 				guesses.put(email.getId(), email.getSpeak());
-				//System.out.println("Email ID:Speak:UpProb:DownProb :: " + email.getId() + ":"+email.getSpeak()+ ":"+email.getUpStreamProb()+":"+email.getDownStremProb());
+				System.out.println("Email ID:Speak:UpProb:DownProb :: " + email.getId() + ":"+email.getSpeak()+ ":"+email.getUpStreamProb()+":"+email.getDownStremProb());
 			}
-			
+			long endTime = System.currentTimeMillis();
+			System.out.println("Total execution time:" + (endTime-startTime)/1000);
 			
 		} catch (FileNotFoundException e) {
 			System.out.println("File not initialized properly");

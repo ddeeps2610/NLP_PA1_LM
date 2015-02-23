@@ -20,4 +20,5 @@ public interface INGram
 	public void laplaceSmoothing(LinkedList<String> corpus);
 	public double calculatePerplexity();
 	public double calculateEmailProbability(Email email);
+	public void deepakSmoothing(LinkedList<String> corpus);
 }

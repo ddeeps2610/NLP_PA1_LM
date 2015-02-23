@@ -78,18 +78,23 @@ public abstract class AbstractNGrams implements INGram
 	      }
 		return retVal;
 	}
-	protected double getUnknownProb(String key) 
+	protected double getUnknownProb(String history) 
 	{
-		double N1 = this.calculateUnknownCount(key);
+		
+		double N1 = 0 ; // = this.calculateUnknownCount(history);
 		double count = 0;
 		
-		// Count the total occurrences of the given (n-1) words
-		for(Map.Entry<String, HashMap<String, NthWord>> nGramEntry : this.nGramMap.entrySet())
-			for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
-			{
-				count += nThWordEntry.getValue().getCount();
-			}
 		
+		// Count the total occurrences of the given (n-1) words
+		if(!this.nGramMap.containsKey(history))
+			return 0.0;
+	//for(Map.Entry<String, HashMap<String, NthWord>> nGramEntry : this.nGramMap.entrySet())
+		for(Map.Entry<String, NthWord> nThWordEntry : this.nGramMap.get(history).entrySet())
+		{
+			count += nThWordEntry.getValue().getCount();
+			if(nThWordEntry.getValue().getCount() == 1) 
+				N1++;
+		}
 		return (N1/count);
 	}
 	
@@ -123,7 +128,7 @@ public abstract class AbstractNGrams implements INGram
 	
 	public final void deepakSmoothing(LinkedList<String> corpus) 
 	{
-		System.out.println("\nPerforming Laplace smoothing..!!");
+		System.out.println("\nPerforming Deepak smoothing..!!");
 		if(this.nGramMap == null)
 			this.countNGram(corpus);
 		
@@ -154,11 +159,24 @@ public abstract class AbstractNGrams implements INGram
 		}		
 	}
 	
-	private double calculateUnknownCount(String key) 
-	{
-		return 0;
-		// TODO Auto-generated method stub
+	private double calculateUnknownCount(String key)
+	{		
+		System.out.println("Get Unknown Count");
+		double N1 = 0;
+		if (this.nGramMap.containsKey(key))
+		{
+					
+			for(Map.Entry<String,NthWord> Ngram : this.nGramMap.get(key).entrySet())
+			{
+				System.out.println(Ngram.getValue().getWord() + ": "+ Ngram.getValue().getCount());
+				
+				if (Ngram.getValue().getCount() == 1)
+					N1 += 1;					
+				
+			}
+		}
 		
+		return N1;
 	}
 
 	public final double calculatePerplexity() 
