@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import preProcessor.Email;
 import preProcessor.PreProcessor;
@@ -57,27 +58,27 @@ public class UniGram extends AbstractNGrams
 	}
 
 	@Override
-	public String generateRandomSentence() 
-	{
-		System.out.println("Generating Random Senetence for Unigram Model!");
-		// Generating a random sentence
-		StringBuilder newSentence = new StringBuilder("<s> ");
+	public String generateRandomSentence(List<String> corpus) {
+		StringBuilder retVal = new StringBuilder();
+		List<String> tempCorpus = new ArrayList<String>();
+		for(String line : corpus) {
+			tempCorpus.addAll(this.tokenizeSentence(line));
+		}		
 		
-		String nthWord = "";
-		
-		// fetch next probable word and append to random sentence until end tag is encountered.
-		do
-		{
-			nthWord = this.getNextWord();
-			// Ignore the start tag if its encountered in the middle of the sentence.
-			if(nthWord.equals("<s>"))
-				continue;
-			
-			newSentence.append(nthWord + " ");
-		}while(!nthWord.contains("</s>"));
-		System.out.println("New Sentence generated:\n"+newSentence);
+		String nextWord = "";
+		Random rand = new Random();
+		int index = 0;
 
-		return newSentence.toString();
+		while(true) {
+			index = rand.nextInt(tempCorpus.size());	
+			nextWord = tempCorpus.get(index);
+			if(nextWord.equalsIgnoreCase("<s>")) continue;
+			if(nextWord.equalsIgnoreCase("</s>")) break;
+			retVal.append(nextWord + " ");
+		}
+		System.out.println("\nRandom Sentence for Unigram Model: \n" + retVal);
+		
+		return retVal.toString().trim();
 	}
 	
 	/**

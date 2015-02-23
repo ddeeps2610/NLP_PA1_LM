@@ -3,9 +3,11 @@
  */
 package NGrams;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import preProcessor.Email;
 import preProcessor.PreProcessor;
@@ -69,33 +71,38 @@ public class BiGram extends AbstractNGrams
 	}
 
 	@Override
-	public String generateRandomSentence() 
-	{
-		// Instantiate the Sentence String and initialize it with Start tag <s>
-		StringBuilder randomSentence = new StringBuilder("<s> ");
-		String nMinusOneWord = "<s>";
-		StringBuilder newSentence = new StringBuilder("<s> ");
-		String nthWord;
+	public String generateRandomSentence(List<String> corpus) {
+		StringBuilder retVal = new StringBuilder();
 		
-		do
-		{
-			nthWord = this.getNextWord(nMinusOneWord);
-			if(nthWord.equals("<s>"))
-				continue;
-			
-			// Assign the nth word to (n-1)th word
-			nMinusOneWord = nthWord;
-			newSentence.append(nthWord + " ");
-		}while(!nthWord.contains("</s>"));
+		List<String> tempCorpus = new ArrayList<String>();		
+		for(String line : corpus) {
+			tempCorpus.addAll(this.tokenizeSentence(line));
+		}				
+
+		String previousWord = "<s>";
+		String nextWord = "";
+		int nextIndex = 0;
+		Random rand = new Random();
+		List<String> tempList = new ArrayList<String>();
+		while(true) {	
+			tempList.clear();
+			for(int index = 0; index < tempCorpus.size() - 1; index++) {
+				if(tempCorpus.get(index).equalsIgnoreCase(previousWord)) {
+					tempList.add(tempCorpus.get(index + 1));
+				}
+			}
+			nextIndex = rand.nextInt(tempList.size());
+			nextWord = tempList.get(nextIndex);
+			if(nextWord.equalsIgnoreCase("</s>")) break;
+			retVal.append(nextWord + " ");
+			previousWord = nextWord;
+		}
+		System.out.println("\nRandom Sentence for Bigram Model: \n" + retVal);
 		
-		
-		return randomSentence.toString();
+		return retVal.toString();
 	}
 
-	private String getNextWord(String nGramMinusOneWord) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public double calculateEmailProbability(Email email) 

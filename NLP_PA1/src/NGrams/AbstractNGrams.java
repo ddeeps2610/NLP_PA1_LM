@@ -100,7 +100,7 @@ public abstract class AbstractNGrams implements INGram
 	
 	public final void laplaceSmoothing(LinkedList<String> corpus) 
 	{
-		System.out.println("\nPerforming Laplace smoothing..!!");
+		//System.out.println("\nPerforming Laplace smoothing..!!");
 		if(this.nGramMap == null)
 			this.countNGram(corpus);
 		
@@ -128,7 +128,7 @@ public abstract class AbstractNGrams implements INGram
 	
 	public final void deepakSmoothing(LinkedList<String> corpus) 
 	{
-		System.out.println("\nPerforming Deepak smoothing..!!");
+		//System.out.println("\nPerforming Deepak smoothing..!!");
 		if(this.nGramMap == null)
 			this.countNGram(corpus);
 		
@@ -161,14 +161,14 @@ public abstract class AbstractNGrams implements INGram
 	
 	private double calculateUnknownCount(String key)
 	{		
-		System.out.println("Get Unknown Count");
+		//System.out.println("Get Unknown Count");
 		double N1 = 0;
 		if (this.nGramMap.containsKey(key))
 		{
 					
 			for(Map.Entry<String,NthWord> Ngram : this.nGramMap.get(key).entrySet())
 			{
-				System.out.println(Ngram.getValue().getWord() + ": "+ Ngram.getValue().getCount());
+				//System.out.println(Ngram.getValue().getWord() + ": "+ Ngram.getValue().getCount());
 				
 				if (Ngram.getValue().getCount() == 1)
 					N1 += 1;					
@@ -181,7 +181,7 @@ public abstract class AbstractNGrams implements INGram
 
 	public final double calculatePerplexity() 
 	{
-		System.out.println("\nCalculating perplexity..!!");
+		//System.out.println("\nCalculating perplexity..!!");
 		double perplexity = 0;
 		int count=0;
 		
@@ -197,7 +197,7 @@ public abstract class AbstractNGrams implements INGram
 		
 		//System.out.println("Pre Perplexity: "+ perplexity + ": " + this.nGramProbabilities.size());
 		perplexity = -1 * perplexity / count;
-		System.out.println("Token types: " + count);
+		//System.out.println("Token types: " + count);
 		//System.out.println("Pre antilog: "+perplexity);
 		return Math.pow(Math.E, (perplexity));
 	}

@@ -33,96 +33,96 @@ public class PreProcessorTest
 			INGram uniGramUpTrain = new UniGram();
 			uniGramUpTrain.computeNGramProbabilities(upTrain);
 			//uniGramUpTrain.printNGramProbabilities();
-			uniGramUpTrain.generateRandomSentence();
+			uniGramUpTrain.generateRandomSentence(upTrain);
 			
 			// Bigram
 			INGram biGramUpTrain = new BiGram();
 			biGramUpTrain.computeNGramProbabilities(upTrain);
 			//biGramUpTrain.printNGramProbabilities();
-			biGramUpTrain.generateRandomSentence();
+			biGramUpTrain.generateRandomSentence(upTrain);
 			
 			// Trigram
 			INGram triGramUpTrain = new TriGram();
 			triGramUpTrain.computeNGramProbabilities(upTrain);
 			//triGramUpTrain.printNGramProbabilities();
-			triGramUpTrain.generateRandomSentence();
+			triGramUpTrain.generateRandomSentence(upTrain);
 			
 			// DownTrain Models
 			// Unigram
 			INGram uniGramDownTrain = new UniGram();
 			uniGramDownTrain.computeNGramProbabilities(downTrain);
 			//uniGramDownTrain.printNGramProbabilities();
-			uniGramDownTrain.generateRandomSentence();
+			uniGramDownTrain.generateRandomSentence(downTrain);
 			
 			// Bigram
 			INGram biGramDownTrain = new BiGram();
 			biGramDownTrain.computeNGramProbabilities(downTrain);
 			//biGramDownTrain.printNGramProbabilities();
-			biGramDownTrain.generateRandomSentence();
+			biGramDownTrain.generateRandomSentence(downTrain);
 			
 			//Trigram
 			INGram triGramDownTrain = new TriGram();
 			triGramDownTrain.computeNGramProbabilities(downTrain);
 			//triGramDownTrain.printNGramProbabilities();
-			triGramDownTrain.generateRandomSentence();	
+			triGramDownTrain.generateRandomSentence(downTrain);	
 			
 			
 			/************************* Validation ****************************/
 			PreProcessor validationPreProcessor = new PreProcessor();
 			validationPreProcessor.process(".\\InputFiles\\validation.txt", InputType.validation);
-			LinkedList<String> validationUpTrain = validationPreProcessor.getUpTrain();
-			LinkedList<String> validationDownTrain = validationPreProcessor.getDownTrain();
+			LinkedList<String> upValidation = validationPreProcessor.getUpValidation();
+			LinkedList<String> downValidation = validationPreProcessor.getDownValidation();
 			
 			// UpTrain Models
 			// Unigram
 			INGram validationUniGramUpTrain = new UniGram();
-			validationUniGramUpTrain.computeNGramProbabilities(validationUpTrain);
-			validationUniGramUpTrain.laplaceSmoothing(upTrain);
-			validationUniGramUpTrain.printNGramProbabilities();
+			validationUniGramUpTrain.computeNGramProbabilities(upValidation);
+			validationUniGramUpTrain.laplaceSmoothing(upValidation);
+			//validationUniGramUpTrain.printNGramProbabilities();
 			double unigramPerplexity = validationUniGramUpTrain.calculatePerplexity();
-			System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
+			//System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
 			
 			// Bigram
-			INGram validationBiGramUpTrain = new UniGram();
-			validationBiGramUpTrain.computeNGramProbabilities(validationUpTrain);
-			validationBiGramUpTrain.laplaceSmoothing(upTrain);
-			validationBiGramUpTrain.printNGramProbabilities();
+			INGram validationBiGramUpTrain = new BiGram();
+			validationBiGramUpTrain.computeNGramProbabilities(upValidation);
+			validationBiGramUpTrain.laplaceSmoothing(upValidation);
+			//validationBiGramUpTrain.printNGramProbabilities();
 			double bigramPerplexity = validationBiGramUpTrain.calculatePerplexity();
-			System.out.println("Perplexity for the bigram model : "+ bigramPerplexity);
+			//System.out.println("Perplexity for the bigram model : "+ bigramPerplexity);
 
 			// Trigram
-			INGram validationTriGramUpTrain = new UniGram();
-			validationTriGramUpTrain.computeNGramProbabilities(validationUpTrain);
-			validationTriGramUpTrain.laplaceSmoothing(upTrain);
-			validationTriGramUpTrain.printNGramProbabilities();
+			INGram validationTriGramUpTrain = new TriGram();
+			validationTriGramUpTrain.computeNGramProbabilities(upValidation);
+			validationTriGramUpTrain.laplaceSmoothing(upValidation);
+			//validationTriGramUpTrain.printNGramProbabilities();
 			double trigramPerplexity = validationTriGramUpTrain.calculatePerplexity();
-			System.out.println("Perplexity for the unigram model : "+ trigramPerplexity);
+			//System.out.println("Perplexity for the trigram model : "+ trigramPerplexity);
 
 			
 			// UpTrain Models
 			// Unigram
 			INGram validationUniGramDownTrain = new UniGram();
-			validationUniGramDownTrain.computeNGramProbabilities(validationDownTrain);
-			validationUniGramDownTrain.laplaceSmoothing(upTrain);
-			validationUniGramDownTrain.printNGramProbabilities();
+			validationUniGramDownTrain.computeNGramProbabilities(downValidation);
+			validationUniGramDownTrain.laplaceSmoothing(downValidation);
+			//validationUniGramDownTrain.printNGramProbabilities();
 			double unigramDownPerplexity = validationUniGramDownTrain.calculatePerplexity();
-			System.out.println("Perplexity for the unigram model : "+ unigramDownPerplexity);
+			//System.out.println("Perplexity for the unigram model : "+ unigramDownPerplexity);
 			
 			// Bigram
-			INGram validationBiGramDownTrain = new UniGram();
-			validationBiGramDownTrain.computeNGramProbabilities(validationDownTrain);
-			validationBiGramDownTrain.laplaceSmoothing(upTrain);
-			validationBiGramDownTrain.printNGramProbabilities();
+			INGram validationBiGramDownTrain = new BiGram();
+			validationBiGramDownTrain.computeNGramProbabilities(downValidation);
+			validationBiGramDownTrain.laplaceSmoothing(downValidation);
+			//validationBiGramDownTrain.printNGramProbabilities();
 			double bigramDownPerplexity = validationBiGramDownTrain.calculatePerplexity();
-			System.out.println("Perplexity for the bigram model : "+ bigramDownPerplexity);
+			//System.out.println("Perplexity for the bigram model : "+ bigramDownPerplexity);
 
 			// Trigram
-			INGram validationTriGramDownTrain = new UniGram();
-			validationTriGramDownTrain.computeNGramProbabilities(validationDownTrain);
-			validationTriGramDownTrain.laplaceSmoothing(upTrain);
-			validationTriGramDownTrain.printNGramProbabilities();
+			INGram validationTriGramDownTrain = new TriGram();
+			validationTriGramDownTrain.computeNGramProbabilities(downValidation);
+			validationTriGramDownTrain.laplaceSmoothing(downValidation);
+			//validationTriGramDownTrain.printNGramProbabilities();
 			double trigramDownPerplexity = validationTriGramDownTrain.calculatePerplexity();
-			System.out.println("Perplexity for the unigram model : "+ trigramDownPerplexity);
+			//System.out.println("Perplexity for the trigram model : "+ trigramDownPerplexity);
 
 			
 			
@@ -142,10 +142,13 @@ public class PreProcessorTest
 			contestPreProcessor.process(".\\InputFiles\\test.txt", InputType.test);
 			LinkedList<Email> testEmails = contestPreProcessor.getTestEmails();
 			
-			//triGramUpTrain.deepakSmoothing(upTrain);
-			//triGramDownTrain.deepakSmoothing(downTrain);
+			triGramUpTrain.deepakSmoothing(upTrain);
+			triGramDownTrain.deepakSmoothing(downTrain);
 			// Result storage
 			HashMap<Integer,SpeakOrder> guesses = new HashMap<Integer, SpeakOrder>();
+			
+			System.out.println("\nGuessing the Speak Order of the Test Emails...!!!");
+			System.out.println("Id,Prediction");
 			for(Email email : testEmails)
 			{
 				double upstreamProb = triGramUpTrain.calculateEmailProbability(email);

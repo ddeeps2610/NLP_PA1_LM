@@ -1,5 +1,6 @@
 package NGrams;
 import java.util.LinkedList;
+import java.util.List;
 
 import preProcessor.Email;
 
@@ -16,7 +17,7 @@ public interface INGram
 	public void countNGram(LinkedList<String> corpus);
 	public void computeNGramProbabilities(LinkedList<String> corpus);
 	public void printNGramProbabilities();
-	public String generateRandomSentence();
+	public String generateRandomSentence(List<String> corpus);
 	public void laplaceSmoothing(LinkedList<String> corpus);
 	public double calculatePerplexity();
 	public double calculateEmailProbability(Email email);
