@@ -1,5 +1,7 @@
 package NGrams;
 
+import java.util.Comparator;
+
 public class NthWord 
 {
 	private String word;
@@ -23,7 +25,17 @@ public class NthWord
 	}
 	public void setProbability(double probability) {
 		this.probability = probability;
+	}	
+}
+
+class NthWordComparator implements Comparator<NthWord> {
+	@Override
+	public int compare(NthWord word1, NthWord word2) {
+		if (word1.getProbability() < word2.getProbability()) {
+			return 1;
+		} else if (word1.getProbability() > word2.getProbability()) {
+			return -1;
+		}
+		return 0;
 	}
-	
-	
 }

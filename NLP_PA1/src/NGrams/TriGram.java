@@ -165,7 +165,7 @@ public class TriGram extends AbstractNGrams
 		int nextIndex = 0;
 		Random rand = new Random();
 		List<String> tempList = new ArrayList<String>();
-		
+		retVal.append("<s> ");
 		
 		// to get the first word
 		for(int index = 0; index < tempCorpus.size() - 1; index++) {
@@ -194,6 +194,9 @@ public class TriGram extends AbstractNGrams
 			previousTwoWord = previousOneWord;
 			previousOneWord = nextWord;
 		}
+		
+		retVal.append("</s>");
+		
 		System.out.println("\nRandom Sentence for Trigram Model: \n" + retVal);
 		
 		return retVal.toString();

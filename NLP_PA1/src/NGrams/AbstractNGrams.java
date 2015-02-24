@@ -5,6 +5,7 @@ package NGrams;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,17 +68,18 @@ public abstract class AbstractNGrams implements INGram
 	
 	
 	@SuppressWarnings("rawtypes")
-	protected List<String> tokenizeSentence (String sentence1)
+	protected List<String> tokenizeSentence (String sentence)
 	{
 		List<String> retVal = new ArrayList<String>();
 		@SuppressWarnings("unchecked")
-		PTBTokenizer ptbt = new PTBTokenizer(new StringReader(sentence1), new CoreLabelTokenFactory(), "");
+		PTBTokenizer ptbt = new PTBTokenizer(new StringReader(sentence), new CoreLabelTokenFactory(), "");
 	      for (CoreLabel label; ptbt.hasNext(); ) {
 	        label = (CoreLabel) ptbt.next();
 	        retVal.add(label.value().toLowerCase());
 	      }
 		return retVal;
 	}
+	
 	protected double getUnknownProb(String history) 
 	{
 		
@@ -225,4 +227,29 @@ public abstract class AbstractNGrams implements INGram
 		System.out.println("Total Probability: " + totalProb);
 	}
 
+	
+	public List<String> getFrequentNGrams(int count) {
+		List<String> retVal = new ArrayList<String>();
+
+		List<NthWord> tempList = new ArrayList<NthWord>();
+
+		for(String key : this.nGramMap.keySet()) {
+			for(String innerKey : this.nGramMap.get(key).keySet()) {
+				NthWord word = new NthWord();
+				word.setProbability(this.nGramMap.get(key).get(innerKey).getProbability()); 
+				word.setCount(this.nGramMap.get(key).get(innerKey).getCount()); 
+				word.setWord((key + " " + this.nGramMap.get(key).get(innerKey).getWord()).trim()); 
+				if(word.getWord().contains("<s>") || word.getWord().contains("</s>")) continue;
+				tempList.add(word);
+			}
+		}
+		
+		Collections.sort(tempList, new NthWordComparator());
+
+		for(int index = 0; (index < count && index < tempList.size()); ++index) {
+		retVal.add(tempList.get(index).getWord());
+		}
+
+		return retVal;
+	}
 }

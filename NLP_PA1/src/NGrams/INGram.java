@@ -22,4 +22,5 @@ public interface INGram
 	public double calculatePerplexity(LinkedList<String> corpus);
 	public double calculateEmailProbability(Email email);
 	public void deepakSmoothing(LinkedList<String> corpus);
+	public List<String> getFrequentNGrams(int count);
 }

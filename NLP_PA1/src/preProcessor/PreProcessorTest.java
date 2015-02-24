@@ -33,39 +33,68 @@ public class PreProcessorTest
 			INGram uniGramUpTrain = new UniGram();
 			uniGramUpTrain.computeNGramProbabilities(upTrain);
 			//uniGramUpTrain.printNGramProbabilities();
-			uniGramUpTrain.generateRandomSentence(upTrain);
+			for(int index = 0; index < 5; index++)
+				uniGramUpTrain.generateRandomSentence(upTrain);
+			
+			for(String string : uniGramUpTrain.getFrequentNGrams(10)) {
+				System.out.println(string);
+			}
 			
 			// Bigram
 			INGram biGramUpTrain = new BiGram();
 			biGramUpTrain.computeNGramProbabilities(upTrain);
 			//biGramUpTrain.printNGramProbabilities();
-			biGramUpTrain.generateRandomSentence(upTrain);
+			for(int index = 0; index < 5; index++)
+				biGramUpTrain.generateRandomSentence(upTrain);
+			
+			for(String string : biGramUpTrain.getFrequentNGrams(10)) {
+				System.out.println(string);
+			}
 			
 			// Trigram
 			INGram triGramUpTrain = new TriGram();
 			triGramUpTrain.computeNGramProbabilities(upTrain);
 			//triGramUpTrain.printNGramProbabilities();
-			triGramUpTrain.generateRandomSentence(upTrain);
+			for(int index = 0; index < 5; index++)
+				triGramUpTrain.generateRandomSentence(upTrain);
+			
+			for(String string : triGramUpTrain.getFrequentNGrams(10)) {
+				System.out.println(string);
+			}
 			
 			// DownTrain Models
 			// Unigram
 			INGram uniGramDownTrain = new UniGram();
 			uniGramDownTrain.computeNGramProbabilities(downTrain);
 			//uniGramDownTrain.printNGramProbabilities();
-			uniGramDownTrain.generateRandomSentence(downTrain);
+			for(int index = 0; index < 5; index++)
+				uniGramDownTrain.generateRandomSentence(downTrain);
+			
+			for(String string : uniGramDownTrain.getFrequentNGrams(10)) {
+				System.out.println(string);
+			}
 			
 			// Bigram
 			INGram biGramDownTrain = new BiGram();
 			biGramDownTrain.computeNGramProbabilities(downTrain);
 			//biGramDownTrain.printNGramProbabilities();
-			biGramDownTrain.generateRandomSentence(downTrain);
+			for(int index = 0; index < 5; index++)
+				biGramDownTrain.generateRandomSentence(downTrain);
+			
+			for(String string : biGramDownTrain.getFrequentNGrams(10)) {
+				System.out.println(string);
+			}
 			
 			//Trigram
 			INGram triGramDownTrain = new TriGram();
 			triGramDownTrain.computeNGramProbabilities(downTrain);
 			//triGramDownTrain.printNGramProbabilities();
-			triGramDownTrain.generateRandomSentence(downTrain);	
+			for(int index = 0; index < 5; index++)
+				triGramDownTrain.generateRandomSentence(downTrain);	
 			
+			for(String string : triGramDownTrain.getFrequentNGrams(10)) {
+				System.out.println(string);
+			}
 			
 			/************************* Validation ****************************/
 			PreProcessor validationPreProcessor = new PreProcessor();

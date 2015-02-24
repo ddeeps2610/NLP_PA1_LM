@@ -149,7 +149,7 @@ public class BiGram extends AbstractNGrams
 		for(String line : corpus) {
 			tempCorpus.addAll(this.tokenizeSentence(line));
 		}				
-
+		retVal.append("<s> ");
 		String previousWord = "<s>";
 		String nextWord = "";
 		int nextIndex = 0;
@@ -168,6 +168,8 @@ public class BiGram extends AbstractNGrams
 			retVal.append(nextWord + " ");
 			previousWord = nextWord;
 		}
+		
+		retVal.append("</s>");
 		System.out.println("\nRandom Sentence for Bigram Model: \n" + retVal);
 		
 		return retVal.toString();

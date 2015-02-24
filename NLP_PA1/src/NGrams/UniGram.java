@@ -135,7 +135,7 @@ public class UniGram extends AbstractNGrams
 		for(String line : corpus) {
 			tempCorpus.addAll(this.tokenizeSentence(line));
 		}		
-		
+		retVal.append("<s> ");
 		String nextWord = "";
 		Random rand = new Random();
 		int index = 0;
@@ -147,6 +147,7 @@ public class UniGram extends AbstractNGrams
 			if(nextWord.equalsIgnoreCase("</s>")) break;
 			retVal.append(nextWord + " ");
 		}
+		retVal.append("</s>");
 		System.out.println("\nRandom Sentence for Unigram Model: \n" + retVal);
 		
 		return retVal.toString().trim();
