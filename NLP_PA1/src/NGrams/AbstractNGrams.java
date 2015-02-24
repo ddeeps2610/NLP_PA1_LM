@@ -71,11 +71,22 @@ public abstract class AbstractNGrams implements INGram
 	protected List<String> tokenizeSentence (String sentence)
 	{
 		List<String> retVal = new ArrayList<String>();
+		String[] removeCharacters = {",", ".", "?", "'", "\"", ";", ":"};
+		
+		
 		@SuppressWarnings("unchecked")
 		PTBTokenizer ptbt = new PTBTokenizer(new StringReader(sentence), new CoreLabelTokenFactory(), "");
 	      for (CoreLabel label; ptbt.hasNext(); ) {
 	        label = (CoreLabel) ptbt.next();
-	        retVal.add(label.value().toLowerCase());
+	        boolean result = false;
+	        for(String str : removeCharacters) {
+	        	if(str.equalsIgnoreCase(label.value().trim())) {
+	        		result = true;
+	        		break;
+	        	}
+	        }
+	        if(result) continue;
+	        retVal.add(label.value());
 	      }
 		return retVal;
 	}

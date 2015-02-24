@@ -31,9 +31,9 @@ public class NthWord
 class NthWordComparator implements Comparator<NthWord> {
 	@Override
 	public int compare(NthWord word1, NthWord word2) {
-		if (word1.getProbability() < word2.getProbability()) {
+		if (word1.getCount() < word2.getCount()) {
 			return 1;
-		} else if (word1.getProbability() > word2.getProbability()) {
+		} else if (word1.getCount() > word2.getCount()) {
 			return -1;
 		}
 		return 0;

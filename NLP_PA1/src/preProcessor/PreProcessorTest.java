@@ -98,7 +98,7 @@ public class PreProcessorTest
 			
 			/************************* Validation ****************************/
 			PreProcessor validationPreProcessor = new PreProcessor();
-			validationPreProcessor.process(".\\InputFiles\\validation.txt", InputType.validation);
+			validationPreProcessor.process(".//InputFiles//validation.txt", InputType.validation);
 			LinkedList<String> upValidation = validationPreProcessor.getUpValidation();
 			LinkedList<String> downValidation = validationPreProcessor.getDownValidation();
 			
@@ -168,7 +168,7 @@ public class PreProcessorTest
 			/****************************** Testing ****************************/
 			// Contest - Test your Up and Down Trained modules for the test mails
 			PreProcessor contestPreProcessor = new PreProcessor();
-			contestPreProcessor.process(".\\InputFiles\\test.txt", InputType.test);
+			contestPreProcessor.process(".//InputFiles//test.txt", InputType.test);
 			LinkedList<Email> testEmails = contestPreProcessor.getTestEmails();
 			
 			//triGramUpTrain.printNGramProbabilities();
