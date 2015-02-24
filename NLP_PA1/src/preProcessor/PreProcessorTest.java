@@ -79,7 +79,7 @@ public class PreProcessorTest
 			validationUniGramUpTrain.computeNGramProbabilities(upValidation);
 			validationUniGramUpTrain.laplaceSmoothing(upValidation);
 			//validationUniGramUpTrain.printNGramProbabilities();
-			double unigramPerplexity = validationUniGramUpTrain.calculatePerplexity();
+			double unigramPerplexity = validationUniGramUpTrain.calculatePerplexity(upValidation);
 			//System.out.println("Perplexity for the unigram model : "+ unigramPerplexity);
 			
 			// Bigram
@@ -87,7 +87,7 @@ public class PreProcessorTest
 			validationBiGramUpTrain.computeNGramProbabilities(upValidation);
 			validationBiGramUpTrain.laplaceSmoothing(upValidation);
 			//validationBiGramUpTrain.printNGramProbabilities();
-			double bigramPerplexity = validationBiGramUpTrain.calculatePerplexity();
+			double bigramPerplexity = validationBiGramUpTrain.calculatePerplexity(upValidation);
 			//System.out.println("Perplexity for the bigram model : "+ bigramPerplexity);
 
 			// Trigram
@@ -95,7 +95,7 @@ public class PreProcessorTest
 			validationTriGramUpTrain.computeNGramProbabilities(upValidation);
 			validationTriGramUpTrain.laplaceSmoothing(upValidation);
 			//validationTriGramUpTrain.printNGramProbabilities();
-			double trigramPerplexity = validationTriGramUpTrain.calculatePerplexity();
+			double trigramPerplexity = validationTriGramUpTrain.calculatePerplexity(upValidation);
 			//System.out.println("Perplexity for the trigram model : "+ trigramPerplexity);
 
 			
@@ -105,7 +105,7 @@ public class PreProcessorTest
 			validationUniGramDownTrain.computeNGramProbabilities(downValidation);
 			validationUniGramDownTrain.laplaceSmoothing(downValidation);
 			//validationUniGramDownTrain.printNGramProbabilities();
-			double unigramDownPerplexity = validationUniGramDownTrain.calculatePerplexity();
+			double unigramDownPerplexity = validationUniGramDownTrain.calculatePerplexity(downValidation);
 			//System.out.println("Perplexity for the unigram model : "+ unigramDownPerplexity);
 			
 			// Bigram
@@ -113,7 +113,7 @@ public class PreProcessorTest
 			validationBiGramDownTrain.computeNGramProbabilities(downValidation);
 			validationBiGramDownTrain.laplaceSmoothing(downValidation);
 			//validationBiGramDownTrain.printNGramProbabilities();
-			double bigramDownPerplexity = validationBiGramDownTrain.calculatePerplexity();
+			double bigramDownPerplexity = validationBiGramDownTrain.calculatePerplexity(downValidation);
 			//System.out.println("Perplexity for the bigram model : "+ bigramDownPerplexity);
 
 			// Trigram
@@ -121,7 +121,7 @@ public class PreProcessorTest
 			validationTriGramDownTrain.computeNGramProbabilities(downValidation);
 			validationTriGramDownTrain.laplaceSmoothing(downValidation);
 			//validationTriGramDownTrain.printNGramProbabilities();
-			double trigramDownPerplexity = validationTriGramDownTrain.calculatePerplexity();
+			double trigramDownPerplexity = validationTriGramDownTrain.calculatePerplexity(downValidation);
 			//System.out.println("Perplexity for the trigram model : "+ trigramDownPerplexity);
 
 			
@@ -142,13 +142,17 @@ public class PreProcessorTest
 			contestPreProcessor.process(".\\InputFiles\\test.txt", InputType.test);
 			LinkedList<Email> testEmails = contestPreProcessor.getTestEmails();
 			
+			//triGramUpTrain.printNGramProbabilities();
 			triGramUpTrain.deepakSmoothing(upTrain);
+			//triGramUpTrain.printNGramProbabilities();
 			triGramDownTrain.deepakSmoothing(downTrain);
 			// Result storage
 			HashMap<Integer,SpeakOrder> guesses = new HashMap<Integer, SpeakOrder>();
 			
 			System.out.println("\nGuessing the Speak Order of the Test Emails...!!!");
 			System.out.println("Id,Prediction");
+			
+			
 			for(Email email : testEmails)
 			{
 				double upstreamProb = triGramUpTrain.calculateEmailProbability(email);

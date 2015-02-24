@@ -19,7 +19,7 @@ public interface INGram
 	public void printNGramProbabilities();
 	public String generateRandomSentence(List<String> corpus);
 	public void laplaceSmoothing(LinkedList<String> corpus);
-	public double calculatePerplexity();
+	public double calculatePerplexity(LinkedList<String> corpus);
 	public double calculateEmailProbability(Email email);
 	public void deepakSmoothing(LinkedList<String> corpus);
 }

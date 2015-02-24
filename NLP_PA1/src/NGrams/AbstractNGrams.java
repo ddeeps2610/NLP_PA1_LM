@@ -74,7 +74,7 @@ public abstract class AbstractNGrams implements INGram
 		PTBTokenizer ptbt = new PTBTokenizer(new StringReader(sentence1), new CoreLabelTokenFactory(), "");
 	      for (CoreLabel label; ptbt.hasNext(); ) {
 	        label = (CoreLabel) ptbt.next();
-	        retVal.add(label.value());
+	        retVal.add(label.value().toLowerCase());
 	      }
 		return retVal;
 	}
@@ -152,8 +152,12 @@ public abstract class AbstractNGrams implements INGram
 				for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
 				{
 					double occurrence = nThWordEntry.getValue().getCount()* (count - unknownCount)/count;
-					nThWordEntry.getValue().setCount(occurrence);
-					nThWordEntry.getValue().setProbability(occurrence/count);
+					if(occurrence != 0)
+					{
+						nThWordEntry.getValue().setCount(occurrence);
+						nThWordEntry.getValue().setProbability(occurrence/count);
+					}
+					
 				}
 			}
 		}		
@@ -179,28 +183,7 @@ public abstract class AbstractNGrams implements INGram
 		return N1;
 	}
 
-	public final double calculatePerplexity() 
-	{
-		//System.out.println("\nCalculating perplexity..!!");
-		double perplexity = 0;
-		int count=0;
-		
-		for(Map.Entry<String, HashMap<String, NthWord>> nGramEntry : this.nGramMap.entrySet())
-		{
-			
-			for(Map.Entry<String, NthWord> nThWordEntry : nGramEntry.getValue().entrySet())
-			{
-				perplexity += Math.log(nThWordEntry.getValue().getProbability());
-				count++;
-			}
-		}
-		
-		//System.out.println("Pre Perplexity: "+ perplexity + ": " + this.nGramProbabilities.size());
-		perplexity = -1 * perplexity / count;
-		//System.out.println("Token types: " + count);
-		//System.out.println("Pre antilog: "+perplexity);
-		return Math.pow(Math.E, (perplexity));
-	}
+	
 	
 	private final int getTotalTokens()
 	{

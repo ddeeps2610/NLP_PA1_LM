@@ -69,6 +69,77 @@ public class BiGram extends AbstractNGrams
 			}
 		}
 	}
+	
+	public double calculatePerplexity(LinkedList<String> corpus) 
+	{
+		//System.out.println("\nCalculating perplexity..!!");
+		double  prob = 0.0;
+		double perplexity = 0;
+		int count=0;
+		
+		String nMinus1;
+		String nMinus2;
+		String history = null;
+		
+		for(String sentenceToken : corpus)
+		{
+			List<String> wordTokens = this.tokenizeSentence(sentenceToken);
+			nMinus1 = "";
+			//nMinus2 = "";
+			
+			
+			for(String word : wordTokens)
+			{
+				history = nMinus1 ;//+" " + nMinus1;
+				
+				// Add the new history in case the given history is not available.
+				if(!this.nGramMap.containsKey(history))
+				{
+					prob = 0.0;
+					
+				}
+				else
+				{
+					// Add the new Nth Word in case the given nth Word is not available
+					if(!this.nGramMap.get(history).containsKey(word))
+					{
+						prob = 0;
+					}
+					// Update the count of the nth word in case it is already present.
+					else
+					{
+						prob = this.nGramMap.get(history).get(word).getProbability();
+					}
+				}
+				//nMinus2 = nMinus1;
+				nMinus1 = word;
+				
+				if(prob != 0)
+				{
+					perplexity += Math.log(prob);
+					count++;
+				}
+				
+				
+			}
+		}
+		
+		
+		//System.out.println("Pre Perplexity: "+ perplexity + ": " + this.nGramProbabilities.size());
+		if(count != 0)
+		{
+			perplexity = -1 * perplexity / count;
+			perplexity = Math.pow(Math.E, (perplexity));
+		}
+		else
+		{
+			perplexity = 10000;
+		}
+		
+		//System.out.println("Token types: " + count);
+		//System.out.println("Pre antilog: "+perplexity);
+		return perplexity;
+	}
 
 	@Override
 	public String generateRandomSentence(List<String> corpus) {
