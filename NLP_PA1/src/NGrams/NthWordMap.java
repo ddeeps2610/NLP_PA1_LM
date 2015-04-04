@@ -4,9 +4,11 @@ import java.util.HashMap;
 
 public class NthWordMap 
 {
+	/************************* State ********************************/
 	private int totalTokens;
 	private HashMap<String, NthWord> nthWords;
 	
+	/************************* Getter and Setters **********************/
 	public int getTotalTokens() {
 		return totalTokens;
 	}

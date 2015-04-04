@@ -21,6 +21,8 @@ public class TriGram extends AbstractNGrams
 
 	/* (non-Javadoc)
 	 * @see NGrams.AbstractNGrams#countNGram(java.util.LinkedList)
+	 * * @author Deepak
+	 * Counts the occurrence of each NGram
 	 */
 	@Override
 	public void countNGram(LinkedList<String> corpus) 
@@ -79,6 +81,11 @@ public class TriGram extends AbstractNGrams
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see NGrams.INGram#calculatePerplexity(java.util.LinkedList)
+	 * * @author Deepak
+	 * Calculates the perplexity(intrinsic evaluation) for the given NGram Model.
+	 */
 	public double calculatePerplexity(LinkedList<String> corpus) 
 	{
 		//System.out.println("\nCalculating perplexity..!!");

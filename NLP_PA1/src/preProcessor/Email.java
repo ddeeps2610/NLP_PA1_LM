@@ -1,14 +1,21 @@
 package preProcessor;
 
+/**
+ * @author Deepak
+ * Defines the object for individual email. 
+ * Stores the id of the email, speak order along with 
+ * the probability of the email for upStream and DownStream Models *
+ */
 public class Email 
 {
+	/************************* State ********************************/
 	private String email;
 	private int id;
 	private SpeakOrder speak;
 	private double upStreamProb;
 	private double downStremProb;
 	
-	
+	/************************* Setters and Getters *********************/
 	public double getUpStreamProb() {
 		return upStreamProb;
 	}

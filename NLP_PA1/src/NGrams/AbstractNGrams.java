@@ -17,6 +17,7 @@ import edu.stanford.nlp.process.PTBTokenizer;
 
 /**
  * @author Deepak
+ * Defines the abstract class for the NGram Model that implements INGram interface.
  *
  */
 public abstract class AbstractNGrams implements INGram 
@@ -111,6 +112,11 @@ public abstract class AbstractNGrams implements INGram
 		return (N1/count);
 	}
 	
+	/* (non-Javadoc)
+	 * @see NGrams.INGram#laplaceSmoothing(java.util.LinkedList)
+	 * @author Deepak
+	 * Performs Add 1 or Laplace smoothing on the given corpus.
+	 */
 	public final void laplaceSmoothing(LinkedList<String> corpus) 
 	{
 		//System.out.println("\nPerforming Laplace smoothing..!!");
@@ -139,6 +145,14 @@ public abstract class AbstractNGrams implements INGram
 		}		
 	}
 	
+	/* (non-Javadoc)
+	 * @see NGrams.INGram#deepakSmoothing(java.util.LinkedList)
+	 * @author Deepak
+	 * Performs smoothing on the given corpus to handle for the unknown words.
+	 * For the unknown words, the probability is identified as the N1 count as per 
+	 * Good-Turing algorithm. Then the probability mass is relatively distributed
+	 * across other entries.
+	 */
 	public final void deepakSmoothing(LinkedList<String> corpus) 
 	{
 		//System.out.println("\nPerforming Deepak smoothing..!!");
@@ -176,6 +190,11 @@ public abstract class AbstractNGrams implements INGram
 		}		
 	}
 	
+	/**
+	 * @param key This is the nGram history for the given ngram model
+	 * @return N1 count - Number of nGrams with frequency 1 as per 
+	 * Good-Turing algorithm
+	 */
 	private double calculateUnknownCount(String key)
 	{		
 		//System.out.println("Get Unknown Count");
@@ -218,6 +237,8 @@ public abstract class AbstractNGrams implements INGram
 
 	/* (non-Javadoc)
 	 * @see NGrams.INGram#printNGramProbabilities()
+	 * @author Deepak
+	 * Prints all NGram probabilities in the corpus
 	 */
 	@Override
 	public final void printNGramProbabilities() 

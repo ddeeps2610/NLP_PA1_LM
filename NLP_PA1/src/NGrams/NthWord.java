@@ -2,12 +2,20 @@ package NGrams;
 
 import java.util.Comparator;
 
+/**
+ * @author Deepak
+ * DEfines the class for each nth word and stores the word along with count
+ * and probabilitity of the word for the given history
+ *
+ */
 public class NthWord 
 {
+	/************************* State ********************************/
 	private String word;
 	private double count;
 	private double probability;
 	
+	/************************* Getters and Setters *******************/
 	public String getWord() {
 		return word;
 	}
@@ -28,6 +36,12 @@ public class NthWord
 	}	
 }
 
+
+/************************* Business Logic **************************/
+/**
+ * @author Ravi
+ *
+ */
 class NthWordComparator implements Comparator<NthWord> {
 	@Override
 	public int compare(NthWord word1, NthWord word2) {
